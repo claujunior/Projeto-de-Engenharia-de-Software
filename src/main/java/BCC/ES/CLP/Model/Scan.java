@@ -1,5 +1,7 @@
 package BCC.ES.CLP.Model;
 
+import org.springframework.web.servlet.FlashMapManager;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,13 +26,13 @@ public class Scan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable=false)
     private String porta;
 
-    @Column
+    @Column(nullable=false)
     private String serviço;
 
-    @ManyToOne
+    @ManyToOne(optional=false)
     @JoinColumn(name = "Alvo_id") 
     private Alvo alvo;
 }
