@@ -23,4 +23,17 @@ public class ServiceAlvo implements ServiceInterface{
     public void SalvarAlvo(Alvo alvo){
         repositoryAlvo.save(alvo);
     }
+    @Override 
+    public void AtualizarAlvo(Alvo alvo){
+        repositoryAlvo.findById(alvo.getId())
+            .map(AlvoOriginal -> {
+                    AlvoOriginal.setIp(alvo.getIp());
+                    AlvoOriginal.setUrl(alvo.getUrl());
+                    return repositoryAlvo.save(AlvoOriginal);
+                });
+    }
+    @Override
+    public void DeletarAlvo(Long id){
+        repositoryAlvo.deleteById(id);
+    }
 }
