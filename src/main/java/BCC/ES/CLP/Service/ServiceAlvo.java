@@ -18,4 +18,9 @@ public class ServiceAlvo implements ServiceInterface{
     public List<Alvo> AllAlvos(){
         return repositoryAlvo.findAll();
     }
+
+    @Override 
+    public void SalvarAlvo(Alvo alvo){
+        repositoryAlvo.save(alvo);
+    }
 }

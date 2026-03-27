@@ -5,4 +5,5 @@ import BCC.ES.CLP.Model.Alvo;
 
 public interface ServiceInterface {
       List<Alvo> AllAlvos();
+      void SalvarAlvo(Alvo a);
 }

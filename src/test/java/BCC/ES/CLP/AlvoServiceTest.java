@@ -12,7 +12,7 @@ import java.util.List;
 import BCC.ES.CLP.Model.Alvo;
 import BCC.ES.CLP.Repository.RepositoryAlvo;
 import BCC.ES.CLP.Service.ServiceAlvo;
-import BCC.ES.CLP.Service.ServiceInterface;
+
 
 public class AlvoServiceTest {
 
