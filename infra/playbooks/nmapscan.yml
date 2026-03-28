@@ -1,0 +1,13 @@
+---
+- name: Nmap Scan
+  hosts: all
+  connection: local
+
+  tasks:
+    - name: Varredura de portas e serviços com Nmap
+      command: "nmap -sV -F {{ alvo }}"
+      register: resultadoNmap
+
+      - name: Empacotar resultado do Nmap
+        ansible.builtin.debug:
+          msg: "Varredura concluida e encapsulada em JSON."

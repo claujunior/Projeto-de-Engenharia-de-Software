@@ -35,7 +35,7 @@ public class Alvo {
         this.url = url;
          try {
         InetAddress endereco = InetAddress.getByName(url);
-        this.ip = endereco.getHostAddress();;
+        this.ip = endereco.getHostAddress();
         } catch (UnknownHostException e) {
         throw new RuntimeException("URL inválida: " + url);
         }
