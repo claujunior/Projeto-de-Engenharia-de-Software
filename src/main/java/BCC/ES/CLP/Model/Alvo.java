@@ -40,5 +40,8 @@ public class Alvo {
         throw new RuntimeException("URL inválida: " + url);
         }
     }
-   
+    public Alvo(String url, String ip){
+        this.url = url;
+        this.ip = ip;
+    }
 }
