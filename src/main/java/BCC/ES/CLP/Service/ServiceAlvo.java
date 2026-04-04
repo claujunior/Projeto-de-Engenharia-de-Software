@@ -42,10 +42,11 @@ public class ServiceAlvo implements ServiceInterface{
     }
 
     @Override
-    public void DeletarAlvo(Long id){
-        repositoryAlvo.findById(id)
+    public Alvo DeletarAlvo(Long id){
+        Alvo xd = repositoryAlvo.findById(id)
         .orElseThrow(() -> new AlvoNaoEncontradoException("Alvo não encontrado"));
-        repositoryAlvo.deleteById(id);
+         repositoryAlvo.deleteById(id);
+         return xd;
     }
 
    

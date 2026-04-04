@@ -29,24 +29,26 @@ public class ControllerAlvo {
    public ResponseEntity<List<Alvo>> obterAlvos(){
         return ResponseEntity.ok(serviceInterface.AllAlvos());
    }
+   //http://localhost:8080/Alvo/get
 
    @PostMapping("/post")
-   public ResponseEntity<String> CadastrarAlvos(@RequestBody Alvo alvo){
+   public ResponseEntity<Alvo> CadastrarAlvos(@RequestBody Alvo alvo){
       serviceInterface.SalvarAlvo(alvo);
-      return ResponseEntity.ok("Alvo cadastrado");
+      return ResponseEntity.ok(alvo);
    }
-
+   //http://localhost:8080/Alvo/post
+   // {"id": null,"ip": "154.250.190.78","url": "www.google1.com"}
     @PutMapping("/update")
-    public ResponseEntity<String> AtualizarAlvo(@RequestBody Alvo alvo){
+    public ResponseEntity<Alvo> AtualizarAlvo(@RequestBody Alvo alvo){
       serviceInterface.AtualizarAlvo(alvo);
-      return ResponseEntity.ok("Alvo atualizado");
+      return ResponseEntity.ok(alvo);
     }
-
+//http://localhost:8080/Alvo/update
+// {"id": 1,"ip": "155.250.190.78","url": "www.google12.com"}
     
     @DeleteMapping("/delete/{id}")
-      public ResponseEntity<String> deleteComida(@PathVariable Long id){
-        serviceInterface.DeletarAlvo(id);
-        return ResponseEntity.ok("Alvo deletado");
+      public ResponseEntity<Alvo> deleteComida(@PathVariable Long id){
+        return ResponseEntity.ok(serviceInterface.DeletarAlvo(id));
     }
-   
+    //http://localhost:8080/Alvo/post/2
 }

@@ -8,5 +8,5 @@ public interface ServiceInterface {
       List<Alvo> AllAlvos();
       void SalvarAlvo(Alvo a);
       void AtualizarAlvo(Alvo b);
-      void DeletarAlvo(Long id);
+      Alvo DeletarAlvo(Long id);
 }
