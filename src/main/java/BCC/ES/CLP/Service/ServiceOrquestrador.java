@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import BCC.ES.CLP.Excepitons.ScanOrquestracaoException;
 import BCC.ES.CLP.Model.Alvo;
 
 
@@ -51,7 +52,7 @@ public class ServiceOrquestrador {
 
                 return jsonOutput;
             } catch (Exception e) {
-                throw new RuntimeException("Falha critica ao executar o scan em " + alvo.getUrl(), e);
+                throw new ScanOrquestracaoException("Falha crítica ao executar o scan em " + alvo.getUrl(), e);
             }
         });
     }
