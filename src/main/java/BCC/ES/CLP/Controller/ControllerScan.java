@@ -10,11 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-<<<<<<< HEAD
 import BCC.ES.CLP.Excepitons.AlvoNaoEncontradoException;
 import BCC.ES.CLP.Model.Alvo;
-=======
->>>>>>> f552282 (Histórico de testes realizados)
 import BCC.ES.CLP.Model.Scan;
 import BCC.ES.CLP.Repository.RepositoryAlvo;
 import BCC.ES.CLP.Repository.RepositoryScan;
@@ -37,7 +34,7 @@ public class ControllerScan {
     // Testar se é possível ver o histórico
     @PostMapping("/post")
     public ResponseEntity<String> cadastrarScan(@RequestBody Scan scan) {
-<<<<<<< HEAD
+
         if (scan.getAlvo() == null || scan.getAlvo().getId() == null) {
             throw new AlvoNaoEncontradoException("Alvo não informado (envie alvo.id)");
         }
@@ -48,8 +45,6 @@ public class ControllerScan {
 
         scan.setAlvo(alvo);
 
-=======
->>>>>>> f552282 (Histórico de testes realizados)
         repositoryScan.save(scan);
         return ResponseEntity.ok("Scan cadastrado com sucesso");
     }
