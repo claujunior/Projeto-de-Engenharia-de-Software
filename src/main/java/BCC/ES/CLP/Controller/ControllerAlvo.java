@@ -47,7 +47,7 @@ public class ControllerAlvo {
 // {"id": 1,"ip": "155.250.190.78","url": "www.google12.com"}
     
     @DeleteMapping("/delete/{id}")
-      public ResponseEntity<Alvo> deleteId(@PathVariable Long id){
+      public ResponseEntity<Alvo> deleteAlvo(@PathVariable Long id){
         return ResponseEntity.ok(serviceInterface.DeletarAlvo(id));
     }
     //http://localhost:8080/Alvo/post/2
