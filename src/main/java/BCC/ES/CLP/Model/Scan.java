@@ -1,6 +1,6 @@
 package BCC.ES.CLP.Model;
 
-import org.springframework.web.servlet.FlashMapManager;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,9 @@ public class Scan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dataHora;
+
     @Column(nullable=false)
     private String porta;
 
@@ -35,4 +39,11 @@ public class Scan {
     @ManyToOne(optional=false)
     @JoinColumn(name = "Alvo_id") 
     private Alvo alvo;
+
+    @PrePersist
+    private void prePersist() {
+        if (dataHora == null) {
+            dataHora = LocalDateTime.now().withNano(0);
+        }
+    }
 }

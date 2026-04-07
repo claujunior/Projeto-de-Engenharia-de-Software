@@ -1,5 +1,6 @@
 package BCC.ES.CLP.Model;
 
+import java.time.LocalDateTime;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,11 +27,21 @@ public class Alvo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dataHoraCadastro;
+
     @Column(unique = true)
     private String ip;
 
     @Column(unique=true)
     private String url;
+
+    @PrePersist
+    private void prePersist() {
+        if (dataHoraCadastro == null) {
+            dataHoraCadastro = LocalDateTime.now().withNano(0);
+        }
+    }
 
     Alvo(String url){
         this.url = url;

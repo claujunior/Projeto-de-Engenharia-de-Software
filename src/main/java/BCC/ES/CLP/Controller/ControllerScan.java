@@ -30,9 +30,7 @@ public class ControllerScan {
     public ResponseEntity<List<Scan>> listarScans() {
         return ResponseEntity.ok(repositoryScan.findAll());
     }
-    //http://localhost:8080/Scan/get
     
-    // Testar se é possível ver o histórico
     @PostMapping("/post")
     public ResponseEntity<String> cadastrarScan(@RequestBody Scan scan) {
 
@@ -49,6 +47,9 @@ public class ControllerScan {
         repositoryScan.save(scan);
         return ResponseEntity.ok("Scan cadastrado com sucesso");
     }
+
+    //http://localhost:8080/Scan/get
+    // Testar se é possível ver o histórico
 
     // Verificar Alvos cadastrados:
     // curl http://localhost:8080/Alvo/get
