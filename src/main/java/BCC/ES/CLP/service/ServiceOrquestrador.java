@@ -57,7 +57,7 @@ public class ServiceOrquestrador {
                     throw new RuntimeException("Timeout no scan");
                 }
 
-                // 🔥 EXTRAI PORTAS E SERVIÇOS
+
                 Pattern pattern = Pattern.compile("(\\d+)/tcp\\s+open\\s+(\\w+)");
                 Matcher matcher = pattern.matcher(output);
 
@@ -67,12 +67,12 @@ public class ServiceOrquestrador {
                     portas.add(matcher.group(1) + ":" + matcher.group(2));
                 }
 
-                // 🔥 VALIDAÇÃO CORRETA
+
                 if (portas.isEmpty()) {
                     throw new RuntimeException("Nenhuma porta aberta encontrada");
                 }
 
-                // 🔥 JSON FINAL LIMPO
+
                 return "{"
                         + "\"host\":\"" + alvo.getIp() + "\","
                         + "\"portas\":\"" + portas + "\""

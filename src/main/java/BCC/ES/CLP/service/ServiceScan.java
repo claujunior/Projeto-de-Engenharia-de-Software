@@ -32,13 +32,11 @@ public class ServiceScan {
         String host = root.get("host").asText();
         String portasStr = root.get("portas").asText();
 
-// remove colchetes
+
         portasStr = portasStr.replace("[", "").replace("]", "");
 
-        // separa cada porta
+
         String[] entries = portasStr.split(",");
-
-
 
         for (String entry : entries) {
             String[] parts = entry.trim().split(":");
