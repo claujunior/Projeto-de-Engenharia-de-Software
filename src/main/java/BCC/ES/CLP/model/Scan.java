@@ -31,7 +31,7 @@ public class Scan {
     private LocalDateTime dataHora;
 
     @Column(nullable=false)
-    private String porta;
+    int porta;
 
     @Column(nullable=false)
     private String serviço;

@@ -3,7 +3,9 @@ package BCC.ES.CLP.controller;
 
 
 import java.util.List;
+import java.util.UUID;
 
+import BCC.ES.CLP.service.ServiceOrquestrador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +26,9 @@ public class ControllerAlvo {
 
    @Autowired
    ServiceInterface serviceInterface;
-    
+
+   @Autowired
+   ServiceOrquestrador teste;
    @GetMapping("/get")
    public ResponseEntity<List<Alvo>> obterAlvos(){
         return ResponseEntity.ok(serviceInterface.AllAlvos());
@@ -33,7 +37,8 @@ public class ControllerAlvo {
 
    @PostMapping("/post")
    public ResponseEntity<Alvo> CadastrarAlvos(@RequestBody Alvo alvo){
-      serviceInterface.SalvarAlvo(alvo);
+        serviceInterface.SalvarAlvo(alvo);
+
       return ResponseEntity.ok(alvo);
    }
    //http://localhost:8080/Alvo/post
@@ -51,4 +56,12 @@ public class ControllerAlvo {
         return ResponseEntity.ok(serviceInterface.DeletarAlvo(id));
     }
     //http://localhost:8080/Alvo/post/2
+
+    @PostMapping("/post1")
+    public ResponseEntity<String> executar(@RequestBody Alvo alvo) {
+
+        String resultado = teste.ExecutarScan(alvo).join();
+
+        return ResponseEntity.ok(resultado);
+    }
 }
