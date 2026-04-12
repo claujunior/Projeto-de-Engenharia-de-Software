@@ -9,9 +9,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
-import BCC.ES.CLP.Model.Alvo;
-import BCC.ES.CLP.Repository.RepositoryAlvo;
-import BCC.ES.CLP.Service.ServiceAlvo;
+import BCC.ES.CLP.model.Alvo;
+import BCC.ES.CLP.repository.RepositoryAlvo;
+import BCC.ES.CLP.service.ServiceAlvo;
 
 
 public class AlvoServiceTest {

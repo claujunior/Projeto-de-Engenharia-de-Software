@@ -1,14 +1,14 @@
-package BCC.ES.CLP.Service;
+package BCC.ES.CLP.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import BCC.ES.CLP.Excepitons.AlvoJaRegistradoException;
-import BCC.ES.CLP.Excepitons.AlvoNaoEncontradoException;
-import BCC.ES.CLP.Model.Alvo;
-import BCC.ES.CLP.Repository.RepositoryAlvo;
+import BCC.ES.CLP.excepitons.AlvoJaRegistradoException;
+import BCC.ES.CLP.excepitons.AlvoNaoEncontradoException;
+import BCC.ES.CLP.model.Alvo;
+import BCC.ES.CLP.repository.RepositoryAlvo;
 
 @Service
 public class ServiceAlvo implements ServiceInterface{

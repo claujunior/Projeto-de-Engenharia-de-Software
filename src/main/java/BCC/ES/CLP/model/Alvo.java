@@ -1,4 +1,4 @@
-package BCC.ES.CLP.Model;
+package BCC.ES.CLP.model;
 
 import java.time.LocalDateTime;
 import java.net.InetAddress;

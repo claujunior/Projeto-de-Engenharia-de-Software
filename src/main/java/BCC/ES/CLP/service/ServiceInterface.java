@@ -1,8 +1,8 @@
-package BCC.ES.CLP.Service;
+package BCC.ES.CLP.service;
 
 import java.util.List;
 
-import BCC.ES.CLP.Model.Alvo;
+import BCC.ES.CLP.model.Alvo;
 
 public interface ServiceInterface {
       List<Alvo> AllAlvos();

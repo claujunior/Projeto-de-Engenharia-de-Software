@@ -1,4 +1,4 @@
-package BCC.ES.CLP.Controller;
+package BCC.ES.CLP.controller;
 
 
 
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import BCC.ES.CLP.Model.Alvo;
-import BCC.ES.CLP.Service.ServiceInterface;
+import BCC.ES.CLP.model.Alvo;
+import BCC.ES.CLP.service.ServiceInterface;
 
 @RestController
 @RequestMapping("/Alvo")

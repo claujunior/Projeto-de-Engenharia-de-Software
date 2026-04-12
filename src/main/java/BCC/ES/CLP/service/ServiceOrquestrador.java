@@ -1,4 +1,4 @@
-package BCC.ES.CLP.Service;
+package BCC.ES.CLP.service;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import BCC.ES.CLP.Excepitons.ScanOrquestracaoException;
-import BCC.ES.CLP.Model.Alvo;
+import BCC.ES.CLP.excepitons.ScanOrquestracaoException;
+import BCC.ES.CLP.model.Alvo;
 
 
 @Service

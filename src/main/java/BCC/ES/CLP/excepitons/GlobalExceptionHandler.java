@@ -1,4 +1,4 @@
-package BCC.ES.CLP.Excepitons;
+package BCC.ES.CLP.excepitons;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

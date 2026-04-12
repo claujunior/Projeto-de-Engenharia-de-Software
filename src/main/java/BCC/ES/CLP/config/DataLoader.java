@@ -1,13 +1,13 @@
-package BCC.ES.CLP.Config;
+package BCC.ES.CLP.config;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import BCC.ES.CLP.Model.Alvo;
-import BCC.ES.CLP.Model.Scan;
-import BCC.ES.CLP.Repository.RepositoryAlvo;
-import BCC.ES.CLP.Repository.RepositoryScan;
+import BCC.ES.CLP.model.Alvo;
+import BCC.ES.CLP.model.Scan;
+import BCC.ES.CLP.repository.RepositoryAlvo;
+import BCC.ES.CLP.repository.RepositoryScan;
 
 @Configuration
 public class DataLoader {

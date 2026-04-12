@@ -1,4 +1,4 @@
-package BCC.ES.CLP.Controller;
+package BCC.ES.CLP.controller;
 
 import java.util.List;
 
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import BCC.ES.CLP.Excepitons.AlvoNaoEncontradoException;
-import BCC.ES.CLP.Model.Alvo;
-import BCC.ES.CLP.Model.Scan;
-import BCC.ES.CLP.Repository.RepositoryAlvo;
-import BCC.ES.CLP.Repository.RepositoryScan;
+import BCC.ES.CLP.excepitons.AlvoNaoEncontradoException;
+import BCC.ES.CLP.model.Alvo;
+import BCC.ES.CLP.model.Scan;
+import BCC.ES.CLP.repository.RepositoryAlvo;
+import BCC.ES.CLP.repository.RepositoryScan;
 
 @RestController
 @RequestMapping("/Scan")

@@ -1,4 +1,4 @@
-package BCC.ES.CLP.Excepitons;
+package BCC.ES.CLP.excepitons;
 
 public class AlvoNaoEncontradoException extends RuntimeException {
 
