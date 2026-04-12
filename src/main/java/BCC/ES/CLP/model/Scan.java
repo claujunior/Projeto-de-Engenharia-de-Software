@@ -1,6 +1,7 @@
 package BCC.ES.CLP.model;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,14 +32,16 @@ public class Scan {
     private LocalDateTime dataHora;
 
     @Column(nullable=false)
-    int porta;
+    private int porta;
 
     @Column(nullable=false)
-    private String serviço;
+    private String servico;
 
     @ManyToOne(optional=false)
     @JoinColumn(name = "Alvo_id") 
     private Alvo alvo;
+
+
 
     @PrePersist
     private void prePersist() {

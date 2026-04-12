@@ -57,11 +57,5 @@ public class ControllerAlvo {
     }
     //http://localhost:8080/Alvo/post/2
 
-    @PostMapping("/post1")
-    public ResponseEntity<String> executar(@RequestBody Alvo alvo) {
 
-        String resultado = teste.ExecutarScan(alvo).join();
-
-        return ResponseEntity.ok(resultado);
-    }
 }

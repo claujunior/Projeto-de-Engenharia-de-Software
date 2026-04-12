@@ -2,6 +2,8 @@ package BCC.ES.CLP.controller;
 
 import java.util.List;
 
+import BCC.ES.CLP.service.ServiceOrquestrador;
+import BCC.ES.CLP.service.ServiceScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,42 +12,34 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import BCC.ES.CLP.excepitons.AlvoNaoEncontradoException;
+
 import BCC.ES.CLP.model.Alvo;
 import BCC.ES.CLP.model.Scan;
-import BCC.ES.CLP.repository.RepositoryAlvo;
-import BCC.ES.CLP.repository.RepositoryScan;
+
 
 @RestController
 @RequestMapping("/Scan")
 public class ControllerScan {
 
     @Autowired
-    private RepositoryScan repositoryScan;
+    ServiceOrquestrador serviceOrquestrador;
 
     @Autowired
-    private RepositoryAlvo repositoryAlvo;
+    ServiceScan serviceScan;
 
     @GetMapping("/get")
     public ResponseEntity<List<Scan>> listarScans() {
-        return ResponseEntity.ok(repositoryScan.findAll());
+
+        return ResponseEntity.ok(serviceScan.AllScan());
     }
-    
+
     @PostMapping("/post")
-    public ResponseEntity<String> cadastrarScan(@RequestBody Scan scan) {
+    public ResponseEntity<String> executar(@RequestBody Alvo alvo) {
 
-        if (scan.getAlvo() == null || scan.getAlvo().getId() == null) {
-            throw new AlvoNaoEncontradoException("Alvo não informado (envie alvo.id)");
-        }
 
-        Long alvoId = scan.getAlvo().getId();
-        Alvo alvo = repositoryAlvo.findById(alvoId)
-                .orElseThrow(() -> new AlvoNaoEncontradoException("Alvo não encontrado: id=" + alvoId));
+        serviceScan.AdicionarBd(serviceOrquestrador.ExecutarScan(alvo).join());
 
-        scan.setAlvo(alvo);
-
-        repositoryScan.save(scan);
-        return ResponseEntity.ok("Scan cadastrado com sucesso");
+        return ResponseEntity.ok("xd");
     }
 
     //http://localhost:8080/Scan/get
