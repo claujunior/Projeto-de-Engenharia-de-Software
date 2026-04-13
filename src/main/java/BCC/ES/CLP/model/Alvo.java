@@ -2,9 +2,8 @@ package BCC.ES.CLP.model;
 
 import java.time.LocalDateTime;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
-import BCC.ES.CLP.excepitons.UrlInvalida;
+import BCC.ES.CLP.exceptions.UrlInvalida;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

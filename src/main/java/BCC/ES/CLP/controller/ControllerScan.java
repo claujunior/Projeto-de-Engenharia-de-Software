@@ -30,16 +30,16 @@ public class ControllerScan {
     @GetMapping("/get")
     public ResponseEntity<List<Scan>> listarScans() {
 
-        return ResponseEntity.ok(serviceScan.AllScan());
+        return ResponseEntity.ok(serviceScan.allScan());
     }
 
     @PostMapping("/post")
     public ResponseEntity<String> executar(@RequestBody Alvo alvo) {
 
 
-        serviceScan.AdicionarBd(serviceOrquestrador.ExecutarScan(alvo).join());
+        serviceScan.adicionarBd(serviceOrquestrador.executarScan(alvo).join());
 
-        return ResponseEntity.ok("xd");
+        return ResponseEntity.ok("Scan realizado com sucesso");
     }
 
     //http://localhost:8080/Scan/get

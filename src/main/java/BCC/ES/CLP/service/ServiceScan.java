@@ -1,6 +1,7 @@
 package BCC.ES.CLP.service;
 
-import BCC.ES.CLP.excepitons.ErroAoEncontrarIp;
+import BCC.ES.CLP.exceptions.ErroAoEncontrarIp;
+import BCC.ES.CLP.exceptions.ScanOrquestracaoException;
 import BCC.ES.CLP.model.Alvo;
 import BCC.ES.CLP.model.Scan;
 import BCC.ES.CLP.repository.RepositoryAlvo;
@@ -11,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,15 +24,20 @@ public class ServiceScan {
     RepositoryAlvo repositoryAlvo;
 
     @Transactional(readOnly = true)
-    public List<Scan> AllScan(){
+    public List<Scan> allScan(){
         return repositoryScan.findAll();
     }
 
     @Transactional
-    public void AdicionarBd(String jsonString) {
+    public void adicionarBd(String jsonString) {
         ObjectMapper mapper = new ObjectMapper();
 
-        JsonNode root = mapper.readTree(jsonString);
+        JsonNode root;
+        try {
+            root = mapper.readTree(jsonString);
+        } catch (Exception e) {
+            throw new ScanOrquestracaoException("JSON de resultado inválido: " + e.getMessage(), e);
+        }
 
         String host = root.get("host").asText();
         String portasStr = root.get("portas").asText();

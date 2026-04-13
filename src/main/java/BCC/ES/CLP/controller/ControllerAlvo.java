@@ -27,25 +27,23 @@ public class ControllerAlvo {
    @Autowired
    ServiceInterface serviceInterface;
 
-   @Autowired
-   ServiceOrquestrador teste;
    @GetMapping("/get")
    public ResponseEntity<List<Alvo>> obterAlvos(){
-        return ResponseEntity.ok(serviceInterface.AllAlvos());
+        return ResponseEntity.ok(serviceInterface.allAlvos());
    }
    //http://localhost:8080/Alvo/get
 
    @PostMapping("/post")
-   public ResponseEntity<Alvo> CadastrarAlvos(@RequestBody Alvo alvo){
-        serviceInterface.SalvarAlvo(alvo);
+   public ResponseEntity<Alvo> cadastrarAlvos(@RequestBody Alvo alvo){
+        serviceInterface.salvarAlvo(alvo);
 
       return ResponseEntity.ok(alvo);
    }
    //http://localhost:8080/Alvo/post
    // {"id": null,"ip": "154.250.190.78","url": "www.google1.com"}
     @PutMapping("/update")
-    public ResponseEntity<Alvo> AtualizarAlvo(@RequestBody Alvo alvo){
-      serviceInterface.AtualizarAlvo(alvo);
+    public ResponseEntity<Alvo> atualizarAlvo(@RequestBody Alvo alvo){
+      serviceInterface.atualizarAlvo(alvo);
       return ResponseEntity.ok(alvo);
     }
 //http://localhost:8080/Alvo/update
@@ -53,7 +51,7 @@ public class ControllerAlvo {
     
     @DeleteMapping("/delete/{id}")
       public ResponseEntity<Alvo> deleteAlvo(@PathVariable Long id){
-        return ResponseEntity.ok(serviceInterface.DeletarAlvo(id));
+        return ResponseEntity.ok(serviceInterface.deletarAlvo(id));
     }
     //http://localhost:8080/Alvo/post/2
 

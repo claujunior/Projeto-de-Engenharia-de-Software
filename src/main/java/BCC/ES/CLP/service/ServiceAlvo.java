@@ -3,7 +3,7 @@ package BCC.ES.CLP.service;
 import java.net.InetAddress;
 import java.util.List;
 
-import BCC.ES.CLP.excepitons.*;
+import BCC.ES.CLP.exceptions.*;
 import BCC.ES.CLP.model.Scan;
 import BCC.ES.CLP.repository.RepositoryScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +23,17 @@ public class ServiceAlvo implements ServiceInterface{
 
     @Override
     @Transactional(readOnly = true)
-    public List<Alvo> AllAlvos(){
+    public List<Alvo> allAlvos(){
         return repositoryAlvo.findAll();
     }
 
     @Override
     @Transactional
-    public void SalvarAlvo(Alvo alvo){
+    public void salvarAlvo(Alvo alvo){
         if(repositoryAlvo.findByIp(alvo.getIp()).isPresent()){
             throw new AlvoJaRegistradoException();
         }
-        if(alvo.getIp().isEmpty() || alvo.getIp() == null){
+        if(alvo.getIp() == null || alvo.getIp().isEmpty()){
             alvo = new Alvo(alvo.getUrl());
         }
         repositoryAlvo.save(alvo);
@@ -41,7 +41,7 @@ public class ServiceAlvo implements ServiceInterface{
 
     @Override
     @Transactional
-    public void AtualizarAlvo(Alvo alvo){
+    public void atualizarAlvo(Alvo alvo){
 
      Alvo alvoOriginal = repositoryAlvo.findById(alvo.getId())
     .orElseThrow(() -> new AlvoNaoEncontradoException("Usuário não encontrado"));
@@ -59,10 +59,10 @@ public class ServiceAlvo implements ServiceInterface{
 
     @Override
     @Transactional
-    public Alvo DeletarAlvo(Long id){
-        Alvo xd = repositoryAlvo.findById(id)
+    public Alvo deletarAlvo(Long id){
+        Alvo alvoEncontrado = repositoryAlvo.findById(id)
         .orElseThrow(() -> new AlvoNaoEncontradoException("Alvo não encontrado"));
-        List<Scan> listaScan = repositoryScan.findByAlvo(xd);
+        List<Scan> listaScan = repositoryScan.findByAlvo(alvoEncontrado);
         if(listaScan.isEmpty()) {
             repositoryAlvo.deleteById(id);
         }
@@ -72,7 +72,7 @@ public class ServiceAlvo implements ServiceInterface{
             }
             repositoryAlvo.deleteById(id);
         }
-         return xd;
+         return alvoEncontrado;
     }
     private void validarAlvo(Alvo alvo){
         try {

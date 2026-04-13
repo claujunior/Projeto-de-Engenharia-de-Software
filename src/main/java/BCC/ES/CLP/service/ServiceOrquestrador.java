@@ -4,18 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import BCC.ES.CLP.excepitons.PortasFechadas;
-import BCC.ES.CLP.excepitons.TimeoutScan;
+import BCC.ES.CLP.exceptions.PortasFechadas;
+import BCC.ES.CLP.exceptions.TimeoutScan;
 import org.springframework.stereotype.Service;
 
-import BCC.ES.CLP.excepitons.ScanOrquestracaoException;
+import BCC.ES.CLP.exceptions.ScanOrquestracaoException;
 import BCC.ES.CLP.model.Alvo;
 
 @Service
@@ -25,7 +24,7 @@ public class ServiceOrquestrador {
     private static final String infra_Dir = base_Dir + "/infra";
     private static final String resultados_Dir = base_Dir + "/resultados";
 
-    public CompletableFuture<String> ExecutarScan(Alvo alvo) {
+    public CompletableFuture<String> executarScan(Alvo alvo) {
         return CompletableFuture.supplyAsync(() -> {
             try {
 

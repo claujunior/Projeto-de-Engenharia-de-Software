@@ -1,4 +1,4 @@
-package BCC.ES.CLP.excepitons;
+package BCC.ES.CLP.exceptions;
 
 public class IpJaExistente extends RuntimeException{
     public IpJaExistente(String message) {

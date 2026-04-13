@@ -34,7 +34,7 @@ public class AlvoServiceTest {
         when(repositoryAlvo.findAll()).thenReturn(listaFake);
 
        
-        List<Alvo> resultado = service.AllAlvos();
+        List<Alvo> resultado = service.allAlvos();
 
       
         assertEquals(2, resultado.size());
