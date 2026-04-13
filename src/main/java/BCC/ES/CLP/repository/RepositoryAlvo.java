@@ -9,4 +9,5 @@ import BCC.ES.CLP.model.Alvo;
 public interface RepositoryAlvo extends JpaRepository<Alvo, Long>{
  public Optional<Alvo> findById(Long Id);
  public Optional<Alvo> findByIp(String ip);
+ public Optional<Alvo> findByUrl(String URL);
 }

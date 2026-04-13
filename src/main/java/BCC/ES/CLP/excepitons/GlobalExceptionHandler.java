@@ -36,4 +36,23 @@ public class GlobalExceptionHandler {
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(ex.getMessage());
     }
+
+    @ExceptionHandler(PortasFechadas.class)
+    public ResponseEntity<String> handlePortasFechadas(PortasFechadas ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+    @ExceptionHandler(ErroAoEncontrarIp.class)
+    public ResponseEntity<String> handleErroAoEncontrarIp(ErroAoEncontrarIp ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+    @ExceptionHandler(TimeoutScan.class)
+    public ResponseEntity<String> handleTimeoutScan(TimeoutScan ex) {
+        return ResponseEntity
+                .status(HttpStatus.GATEWAY_TIMEOUT)
+                .body(ex.getMessage());
+    }
 }

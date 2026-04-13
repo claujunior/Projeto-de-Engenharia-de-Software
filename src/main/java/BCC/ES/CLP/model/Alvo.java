@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import BCC.ES.CLP.excepitons.UrlInvalida;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -43,13 +44,13 @@ public class Alvo {
         }
     }
 
-    Alvo(String url){
+    public Alvo(String url){
         this.url = url;
          try {
         InetAddress endereco = InetAddress.getByName(url);
         this.ip = endereco.getHostAddress();
-        } catch (UnknownHostException e) {
-        throw new RuntimeException("URL inválida: " + url);
+        } catch (Exception e) {
+        throw new UrlInvalida("URL inválida: " + url);
         }
     }
     public Alvo(String url, String ip){

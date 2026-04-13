@@ -11,6 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import BCC.ES.CLP.excepitons.PortasFechadas;
+import BCC.ES.CLP.excepitons.TimeoutScan;
 import org.springframework.stereotype.Service;
 
 import BCC.ES.CLP.excepitons.ScanOrquestracaoException;
@@ -54,7 +56,7 @@ public class ServiceOrquestrador {
 
                 if (!finished) {
                     process.destroyForcibly();
-                    throw new RuntimeException("Timeout no scan");
+                    throw new TimeoutScan("Timeout no scan");
                 }
 
 
@@ -69,7 +71,7 @@ public class ServiceOrquestrador {
 
 
                 if (portas.isEmpty()) {
-                    throw new RuntimeException("Nenhuma porta aberta encontrada");
+                    throw new PortasFechadas("Nenhuma porta aberta encontrada");
                 }
 
 
@@ -78,10 +80,11 @@ public class ServiceOrquestrador {
                         + "\"portas\":\"" + portas + "\""
                         + "}";
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new ScanOrquestracaoException("Falha no scan em " + alvo.getIp(), e);
-            }
+            } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ScanOrquestracaoException("Falha no scan em " + alvo.getIp(), e);
+        }
         });
     }
 }
