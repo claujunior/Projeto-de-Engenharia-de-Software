@@ -27,7 +27,6 @@ public class TokenService {
                     .sign(algorithm);
             return token;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("falha ao criar token");
         }
     }
