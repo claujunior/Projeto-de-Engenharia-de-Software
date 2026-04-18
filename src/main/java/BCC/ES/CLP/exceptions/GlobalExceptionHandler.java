@@ -3,6 +3,7 @@ package BCC.ES.CLP.exceptions;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -54,5 +55,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.GATEWAY_TIMEOUT)
                 .body(ex.getMessage());
+    }
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<String> handleAuthError(AuthenticationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("Credenciais inválidas");
+    }
+    @ExceptionHandler(UsuarioJaExistente.class)
+    public ResponseEntity<String> handleAuthError(UsuarioJaExistente e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
     }
 }

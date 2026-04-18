@@ -10,8 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import BCC.ES.CLP.exceptions.AlvoNaoEncontradoException;
 import BCC.ES.CLP.exceptions.PortasFechadas;
 import BCC.ES.CLP.exceptions.TimeoutScan;
+import BCC.ES.CLP.repository.RepositoryAlvo;
 import org.springframework.stereotype.Service;
 
 import BCC.ES.CLP.exceptions.ScanOrquestracaoException;
@@ -22,21 +24,25 @@ public class ServiceOrquestrador {
 
     private static final String base_Dir = System.getProperty("user.dir");
     private static final String infra_Dir = base_Dir + "/infra";
-    private static final String resultados_Dir = base_Dir + "/resultados";
 
-    public CompletableFuture<String> executarScan(Alvo alvo) {
+    private final RepositoryAlvo repositoryAlvo;
+
+    public ServiceOrquestrador(RepositoryAlvo repositoryAlvo){
+        this.repositoryAlvo = repositoryAlvo;
+    }
+    public CompletableFuture<String> executarScan(Long id) {
         return CompletableFuture.supplyAsync(() -> {
             try {
 
-                new File(resultados_Dir).mkdirs();
-
+                if(repositoryAlvo.findById(id).isEmpty()){
+                    throw new AlvoNaoEncontradoException();
+                }
                 String[] command = {
                         "docker", "run", "--rm", "--network", "host",
                         "-v", infra_Dir + ":/app/infra",
-                        "-v", resultados_Dir + ":/app/resultados",
                         "scanner-image",
                         "ansible-playbook",
-                        "-i", alvo.getIp() + ",",
+                        "-i", repositoryAlvo.findById(id).get().getIp() + ",",
                         "/app/infra/playbooks/nmapscan.yml"
                 };
 
@@ -75,14 +81,14 @@ public class ServiceOrquestrador {
 
 
                 return "{"
-                        + "\"host\":\"" + alvo.getIp() + "\","
+                        + "\"host\":\"" + repositoryAlvo.findById(id).get().getIp() + "\","
                         + "\"portas\":\"" + portas + "\""
                         + "}";
 
             } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new ScanOrquestracaoException("Falha no scan em " + alvo.getIp(), e);
+            throw new ScanOrquestracaoException("Falha no scan em " + repositoryAlvo.findById(id).get().getIp(), e);
         }
         });
     }

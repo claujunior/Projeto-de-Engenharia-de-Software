@@ -6,11 +6,7 @@ import BCC.ES.CLP.service.ServiceOrquestrador;
 import BCC.ES.CLP.service.ServiceScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 import BCC.ES.CLP.model.Alvo;
@@ -21,11 +17,15 @@ import BCC.ES.CLP.model.Scan;
 @RequestMapping("/Scan")
 public class ControllerScan {
 
-    @Autowired
-    ServiceOrquestrador serviceOrquestrador;
 
-    @Autowired
-    ServiceScan serviceScan;
+    private final ServiceOrquestrador serviceOrquestrador;
+
+    private final ServiceScan serviceScan;
+
+    public ControllerScan(ServiceScan serviceScan,ServiceOrquestrador serviceOrquestrador){
+        this.serviceScan=serviceScan;
+        this.serviceOrquestrador=serviceOrquestrador;
+    }
 
     @GetMapping("/get")
     public ResponseEntity<List<Scan>> listarScans() {
@@ -33,11 +33,11 @@ public class ControllerScan {
         return ResponseEntity.ok(serviceScan.allScan());
     }
 
-    @PostMapping("/post")
-    public ResponseEntity<String> executar(@RequestBody Alvo alvo) {
+    @PostMapping("/post/{id}")
+    public ResponseEntity<String> executar(@PathVariable Long id) {
 
 
-        serviceScan.adicionarBd(serviceOrquestrador.executarScan(alvo).join());
+        serviceScan.adicionarBd(serviceOrquestrador.executarScan(id).join());
 
         return ResponseEntity.ok("Scan realizado com sucesso");
     }

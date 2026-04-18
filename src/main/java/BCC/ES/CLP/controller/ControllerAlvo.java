@@ -24,8 +24,12 @@ import BCC.ES.CLP.service.ServiceInterface;
 @RequestMapping("/Alvo")
 public class ControllerAlvo {
 
-   @Autowired
-   ServiceInterface serviceInterface;
+
+   private final ServiceInterface serviceInterface;
+
+   public ControllerAlvo(ServiceInterface serviceInterface){
+       this.serviceInterface=serviceInterface;
+   }
 
    @GetMapping("/get")
    public ResponseEntity<List<Alvo>> obterAlvos(){

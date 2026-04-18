@@ -16,10 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ServiceAlvo implements ServiceInterface{
     
-    @Autowired
-    RepositoryAlvo repositoryAlvo;
-    @Autowired
-    private RepositoryScan repositoryScan;
+
+    private final RepositoryAlvo repositoryAlvo;
+
+    private final RepositoryScan repositoryScan;
+
+    public ServiceAlvo(RepositoryAlvo repositoryAlvo,RepositoryScan repositoryScan){
+        this.repositoryAlvo=repositoryAlvo;
+        this.repositoryScan=repositoryScan;
+    }
 
     @Override
     @Transactional(readOnly = true)

@@ -17,11 +17,15 @@ import java.util.Optional;
 
 @Service
 public class ServiceScan {
-    @Autowired
-    RepositoryScan repositoryScan;
 
-    @Autowired
-    RepositoryAlvo repositoryAlvo;
+    private final RepositoryScan repositoryScan;
+
+    private final RepositoryAlvo repositoryAlvo;
+
+    public ServiceScan(RepositoryScan repositoryScan,RepositoryAlvo repositoryAlvo){
+        this.repositoryScan=repositoryScan;
+        this.repositoryAlvo=repositoryAlvo;
+    }
 
     @Transactional(readOnly = true)
     public List<Scan> allScan(){

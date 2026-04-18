@@ -6,6 +6,7 @@ import BCC.ES.CLP.model.User;
 import BCC.ES.CLP.model.UserRole;
 import BCC.ES.CLP.repository.RepositoryUser;
 import BCC.ES.CLP.service.TokenService;
+import BCC.ES.CLP.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,34 +18,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class ControllerLogin {
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final UsuarioService usuarioService;
 
-    @Autowired
-    RepositoryUser repositoryUser;
-
-    @Autowired
-    TokenService tokenService;
+    public ControllerLogin(UsuarioService usuarioService){
+        this.usuarioService=usuarioService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
-    var usernamePassword = new UsernamePasswordAuthenticationToken(loginDto.getLogin(),loginDto.getSenha());
-    var auth = authenticationManager.authenticate(usernamePassword);
-
-    var token = tokenService.gerarToken((User) auth.getPrincipal());
-
-    return ResponseEntity.ok(token);
+    return ResponseEntity.ok(usuarioService.login(loginDto));
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> registrar(@RequestBody RegisterDto registerDto){
-        if(repositoryUser.findByLogin(registerDto.getLogin())!=null){
-            return ResponseEntity.badRequest().build();
-        }
-        String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getSenha());
-
-        User newUser = new User(null,registerDto.getLogin(),encryptedPassword, registerDto.getCpf(), UserRole.USER);
-        repositoryUser.save(newUser);
+        usuarioService.registrar(registerDto);
         return ResponseEntity.ok("Resgistrado com sucesso");
     }
 }
