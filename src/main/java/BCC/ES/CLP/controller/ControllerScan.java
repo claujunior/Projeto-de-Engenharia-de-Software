@@ -35,11 +35,7 @@ public class ControllerScan {
 
     @PostMapping("/post/{id}")
     public ResponseEntity<String> executar(@PathVariable Long id) {
-
-
-        serviceScan.adicionarBd(serviceOrquestrador.executarScan(id).join());
-
-        return ResponseEntity.ok("Scan realizado com sucesso");
+        return ResponseEntity.ok(serviceScan.adicionarBd(serviceOrquestrador.executarScan(id).join()));
     }
 
     //http://localhost:8080/Scan/get

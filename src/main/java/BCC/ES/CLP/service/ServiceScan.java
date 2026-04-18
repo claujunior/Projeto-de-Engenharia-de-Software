@@ -21,10 +21,12 @@ public class ServiceScan {
     private final RepositoryScan repositoryScan;
 
     private final RepositoryAlvo repositoryAlvo;
+    private final LlmService llmService;
 
-    public ServiceScan(RepositoryScan repositoryScan,RepositoryAlvo repositoryAlvo){
+    public ServiceScan(RepositoryScan repositoryScan,RepositoryAlvo repositoryAlvo,LlmService llmService){
         this.repositoryScan=repositoryScan;
         this.repositoryAlvo=repositoryAlvo;
+        this.llmService=llmService;
     }
 
     @Transactional(readOnly = true)
@@ -33,7 +35,7 @@ public class ServiceScan {
     }
 
     @Transactional
-    public void adicionarBd(String jsonString) {
+    public String adicionarBd(String jsonString) {
         ObjectMapper mapper = new ObjectMapper();
 
         JsonNode root;
@@ -64,5 +66,6 @@ public class ServiceScan {
 
             repositoryScan.save(new Scan(null, null, port,service,optional.get()));
         }
+        return llmService.perguntar(jsonString + " faça um relatorio sobre as portas e os servicos e e diga as vulnerabilidades de seguranca");
     }
 }
