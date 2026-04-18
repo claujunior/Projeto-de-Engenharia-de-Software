@@ -50,11 +50,11 @@ public class ServiceAlvo implements ServiceInterface{
 
      Alvo alvoOriginal = repositoryAlvo.findById(alvo.getId())
     .orElseThrow(() -> new AlvoNaoEncontradoException("Usuário não encontrado"));
-    if(repositoryAlvo.findByIp(alvo.getIp()).isPresent()){
-        throw new IpJaExistente("Esse Ip ja existe no banco de dados não foi possivel atualizar o Alvo");
+    if(repositoryAlvo.findByIp(alvo.getIp()).isEmpty()){
+        throw new IpJaNaoExistente("Esse Ip não existe no banco");
     }
-    if(repositoryAlvo.findByUrl(alvo.getIp()).isPresent()){
-            throw new UrlJaExistente("Esse Url ja existe no banco de dados não foi possivel atualizar o Alvo");
+    if(repositoryAlvo.findByUrl(alvo.getUrl()).isEmpty()){
+            throw new UrlJaNaoExistente("Esse Url não existe no banco de dados não foi possivel atualizar o Alvo");
     }
     validarAlvo(alvo);
     alvoOriginal.setIp(alvo.getIp());

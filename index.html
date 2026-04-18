@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLP Scanner</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #0f1318;
+    --border: #1e2530;
+    --accent: #00ff9d;
+    --accent2: #00c8ff;
+    --danger: #ff4757;
+    --warn: #ffa502;
+    --text: #c9d1d9;
+    --muted: #4a5568;
+    --mono: 'Share Tech Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ---- GRID BACKGROUND ---- */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,157,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,157,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ---- AUTH SCREEN ---- */
+  #auth-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    background: var(--bg);
+  }
+
+  .auth-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    padding: 2.5rem 3rem;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+  }
+
+  .auth-box::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .auth-logo {
+    font-family: var(--mono);
+    color: var(--accent);
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    letter-spacing: 2px;
+  }
+
+  .auth-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    color: #fff;
+  }
+
+  .auth-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .auth-tab {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    letter-spacing: 1px;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+  }
+
+  .auth-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+
+  label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+
+  input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    padding: 0.7rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input:focus { border-color: var(--accent); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    padding: 0.7rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .btn:hover { background: var(--accent); color: var(--bg); }
+
+  .btn-full { width: 100%; justify-content: center; }
+
+  .btn-danger { border-color: var(--danger); color: var(--danger); }
+  .btn-danger:hover { background: var(--danger); color: #fff; }
+
+  .btn-warn { border-color: var(--warn); color: var(--warn); }
+  .btn-warn:hover { background: var(--warn); color: var(--bg); }
+
+  .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.75rem; }
+
+  .auth-msg {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 0.6rem;
+    margin-top: 1rem;
+    display: none;
+  }
+
+  .auth-msg.error { color: var(--danger); border: 1px solid var(--danger); }
+  .auth-msg.success { color: var(--accent); border: 1px solid var(--accent); }
+
+  /* ---- APP ---- */
+  #app { display: none; position: relative; z-index: 1; }
+
+  /* ---- TOPBAR ---- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 1.1rem;
+  }
+
+  .brand-name {
+    font-family: var(--mono);
+    font-size: 1rem;
+    color: var(--accent);
+    letter-spacing: 3px;
+  }
+
+  .brand-sub {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-top: 1px;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .user-pill {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.8rem;
+  }
+
+  /* ---- NAV TABS ---- */
+  .nav-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    background: var(--surface);
+  }
+
+  .nav-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    padding: 0.9rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+    text-transform: uppercase;
+  }
+
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ---- MAIN CONTENT ---- */
+  .main { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .section-title span {
+    color: var(--accent);
+    margin-right: 0.5rem;
+  }
+
+  /* ---- TABLE ---- */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+  }
+
+  thead th {
+    background: #0d1117;
+    color: var(--muted);
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(0,255,157,0.03); }
+
+  td {
+    padding: 0.8rem 1rem;
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  .ip-badge {
+    color: var(--accent2);
+  }
+
+  .port-badge {
+    background: rgba(0,200,255,0.1);
+    color: var(--accent2);
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .service-badge {
+    color: var(--accent);
+  }
+
+  .ts {
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  /* ---- MODAL ---- */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    padding: 2rem;
+    width: 100%;
+    max-width: 460px;
+    position: relative;
+    animation: modalIn 0.2s ease;
+  }
+
+  @keyframes modalIn {
+    from { transform: translateY(-16px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-title {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+  }
+
+  /* ---- EMPTY STATE ---- */
+  .empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+  }
+
+  .empty-icon { font-size: 2rem; margin-bottom: 0.75rem; opacity: 0.3; }
+
+  /* ---- LOADING / STATUS ---- */
+  .status-bar {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    padding: 0.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .dot.red { background: var(--danger); animation: none; }
+
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 0.75rem 1.25rem;
+    z-index: 999;
+    animation: toastIn 0.3s ease;
+    max-width: 300px;
+  }
+
+  .toast.error { border-left-color: var(--danger); color: var(--danger); }
+  .toast.success { border-left-color: var(--accent); color: var(--accent); }
+
+  @keyframes toastIn {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---- STATS ROW ---- */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.25rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-value {
+    font-family: var(--mono);
+    font-size: 2rem;
+    color: var(--accent);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  /* sections */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* scan running indicator */
+  .scan-running {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--warn);
+  }
+</style>
+</head>
+<body>
+
+<!-- =================== AUTH SCREEN =================== -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">// CLP</div>
+    <div class="auth-title">Network Scanner</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">LOGIN</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">REGISTER</button>
+    </div>
+
+    <!-- Login form -->
+    <div id="login-form">
+      <div class="form-group">
+        <label>Usuário</label>
+        <input type="text" id="login-user" placeholder="seu_usuario" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-full" onclick="doLogin()">
+        <span id="login-btn-text">ENTRAR</span>
+      </button>
+      <div class="auth-msg" id="login-msg"></div>
+    </div>
+
+    <!-- Register form -->
+    <div id="register-form" style="display:none">
+      <div class="form-group">
+        <label>Usuário</label>
+        <input type="text" id="reg-user" placeholder="novo_usuario" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="reg-pass" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <button class="btn btn-full" onclick="doRegister()">
+        <span id="reg-btn-text">CRIAR CONTA</span>
+      </button>
+      <div class="auth-msg" id="reg-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== APP =================== -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-icon">⌖</div>
+      <div>
+        <div class="brand-name">CLP SCANNER</div>
+        <div class="brand-sub">NETWORK RECON SYSTEM</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-pill" id="user-display">USER</div>
+      <button class="btn btn-sm btn-danger" onclick="doLogout()">SAIR</button>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div class="dot" id="status-dot"></div>
+    <span id="status-text">CONECTADO — localhost:8080</span>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('dashboard')">DASHBOARD</button>
+    <button class="nav-tab" onclick="switchTab('alvos')">ALVOS</button>
+    <button class="nav-tab" onclick="switchTab('scans')">HISTÓRICO DE SCANS</button>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="tab-content active" id="tab-dashboard">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Alvos cadastrados</div>
+          <div class="stat-value" id="stat-alvos">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Scans realizados</div>
+          <div class="stat-value" id="stat-scans">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Portas encontradas</div>
+          <div class="stat-value" id="stat-portas">—</div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title"><span>//</span> ÚLTIMOS SCANS</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ALVO</th>
+              <th>IP</th>
+              <th>PORTA</th>
+              <th>SERVIÇO</th>
+              <th>DATA/HORA</th>
+            </tr>
+          </thead>
+          <tbody id="dashboard-scans-body">
+            <tr><td colspan="6"><div class="empty"><div class="empty-icon">◌</div>Carregando...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ALVOS -->
+    <div class="tab-content" id="tab-alvos">
+      <div class="section-header">
+        <div class="section-title"><span>//</span> ALVOS CADASTRADOS</div>
+        <button class="btn" onclick="openAlvoModal()">+ NOVO ALVO</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>IP</th>
+              <th>URL</th>
+              <th>CADASTRO</th>
+              <th>AÇÕES</th>
+            </tr>
+          </thead>
+          <tbody id="alvos-body">
+            <tr><td colspan="5"><div class="empty"><div class="empty-icon">◌</div>Carregando...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SCANS -->
+    <div class="tab-content" id="tab-scans">
+      <div class="section-header">
+        <div class="section-title"><span>//</span> HISTÓRICO DE SCANS</div>
+        <button class="btn" onclick="loadScans()">↻ ATUALIZAR</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>ALVO</th>
+              <th>IP</th>
+              <th>PORTA</th>
+              <th>SERVIÇO</th>
+              <th>DATA/HORA</th>
+            </tr>
+          </thead>
+          <tbody id="scans-body">
+            <tr><td colspan="6"><div class="empty"><div class="empty-icon">◌</div>Carregando...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- =================== MODAL ALVO =================== -->
+<div class="modal-overlay" id="alvo-modal">
+  <div class="modal">
+    <div class="modal-title" id="alvo-modal-title">// NOVO ALVO</div>
+    <input type="hidden" id="alvo-id">
+    <div class="form-group">
+      <label>IP (opcional se informar URL)</label>
+      <input type="text" id="alvo-ip" placeholder="192.168.0.1">
+    </div>
+    <div class="form-group">
+      <label>URL (opcional se informar IP)</label>
+      <input type="text" id="alvo-url" placeholder="exemplo.com">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" onclick="closeAlvoModal()">CANCELAR</button>
+      <button class="btn" onclick="saveAlvo()">SALVAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- =================== MODAL CONFIRMAR DELETE =================== -->
+<div class="modal-overlay" id="del-modal">
+  <div class="modal">
+    <div class="modal-title">// CONFIRMAR EXCLUSÃO</div>
+    <p style="font-family:var(--mono);font-size:0.85rem;color:var(--text)">Deseja remover o alvo <span id="del-alvo-info" style="color:var(--danger)"></span>?</p>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeDelModal()">CANCELAR</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">EXCLUIR</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:8080';
+let token = '';
+let currentUser = '';
+let deleteTargetId = null;
+let scansCache = [];
+let alvosCache = [];
+
+// ---- UTILS ----
+function toast(msg, type='success') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+function setStatus(ok) {
+  document.getElementById('status-dot').className = ok ? 'dot' : 'dot red';
+  document.getElementById('status-text').textContent = ok
+    ? 'CONECTADO — localhost:8080'
+    : 'ERRO DE CONEXÃO — verifique o servidor';
+}
+
+function fmtDate(d) {
+  if (!d) return '—';
+  return d.replace('T', ' ').substring(0, 16);
+}
+
+// ---- AUTH ----
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+  });
+  document.getElementById('login-form').style.display = tab === 'login' ? '' : 'none';
+  document.getElementById('register-form').style.display = tab === 'register' ? '' : 'none';
+}
+
+async function doLogin() {
+  const username = document.getElementById('login-user').value.trim();
+  const password = document.getElementById('login-pass').value;
+  const msg = document.getElementById('login-msg');
+  const btn = document.getElementById('login-btn-text');
+  if (!username || !password) { showMsg(msg, 'Preencha todos os campos', 'error'); return; }
+  btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const res = await fetch(`${API}/auth/login`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({login: username, senha: password})
+    });
+    if (!res.ok) throw new Error(await res.text());
+    token = await res.text();
+    currentUser = username;
+    enterApp();
+  } catch(e) {
+    showMsg(msg, e.message || 'Credenciais inválidas', 'error');
+  } finally { btn.textContent = 'ENTRAR'; }
+}
+
+async function doRegister() {
+  const username = document.getElementById('reg-user').value.trim();
+  const password = document.getElementById('reg-pass').value;
+  const msg = document.getElementById('reg-msg');
+  const btn = document.getElementById('reg-btn-text');
+  if (!username || !password) { showMsg(msg, 'Preencha todos os campos', 'error'); return; }
+  btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const res = await fetch(`${API}/auth/register`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({username, password})
+    });
+    if (!res.ok) throw new Error(await res.text());
+    showMsg(msg, 'Conta criada! Faça login.', 'success');
+    setTimeout(() => switchAuthTab('login'), 1500);
+  } catch(e) {
+    showMsg(msg, e.message || 'Erro ao registrar', 'error');
+  } finally { btn.textContent = 'CRIAR CONTA'; }
+}
+
+function showMsg(el, txt, type) {
+  el.textContent = txt;
+  el.className = `auth-msg ${type}`;
+  el.style.display = '';
+}
+
+function doLogout() {
+  token = '';
+  currentUser = '';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('auth-screen').style.display = 'flex';
+}
+
+function enterApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('user-display').textContent = currentUser.toUpperCase();
+  loadAll();
+}
+
+// ---- API HELPERS ----
+async function apiFetch(path, opts={}) {
+  const res = await fetch(`${API}${path}`, {
+    ...opts,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      ...(opts.headers||{})
+    }
+  });
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(txt || `HTTP ${res.status}`);
+  }
+  const ct = res.headers.get('content-type')||'';
+  if (ct.includes('application/json')) return res.json();
+  return res.text();
+}
+
+// ---- LOAD DATA ----
+async function loadAll() {
+  try {
+    await Promise.all([loadAlvos(), loadScans()]);
+    setStatus(true);
+    updateStats();
+  } catch(e) {
+    setStatus(false);
+  }
+}
+
+async function loadAlvos() {
+  try {
+    alvosCache = await apiFetch('/Alvo/get');
+    renderAlvos();
+  } catch(e) {
+    document.getElementById('alvos-body').innerHTML =
+      `<tr><td colspan="5"><div class="empty"><div class="empty-icon">⚠</div>${e.message}</div></td></tr>`;
+  }
+}
+
+async function loadScans() {
+  try {
+    scansCache = await apiFetch('/Scan/get');
+    renderScans();
+    renderDashboard();
+  } catch(e) {
+    document.getElementById('scans-body').innerHTML =
+      `<tr><td colspan="6"><div class="empty"><div class="empty-icon">⚠</div>${e.message}</div></td></tr>`;
+  }
+}
+
+function updateStats() {
+  document.getElementById('stat-alvos').textContent = alvosCache.length;
+  document.getElementById('stat-scans').textContent = scansCache.length;
+  const portas = new Set(scansCache.map(s => s.porta));
+  document.getElementById('stat-portas').textContent = portas.size;
+}
+
+// ---- RENDER ----
+function renderAlvos() {
+  const tbody = document.getElementById('alvos-body');
+  if (!alvosCache.length) {
+    tbody.innerHTML = `<tr><td colspan="5"><div class="empty"><div class="empty-icon">◌</div>Nenhum alvo cadastrado</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = alvosCache.map(a => `
+    <tr>
+      <td class="ts">${a.id}</td>
+      <td class="ip-badge">${a.ip || '—'}</td>
+      <td>${a.url || '—'}</td>
+      <td class="ts">${fmtDate(a.dataHoraCadastro)}</td>
+      <td>
+        <div style="display:flex;gap:0.4rem;align-items:center;">
+          <button class="btn btn-sm" onclick="runScan(${a.id}, this)" title="Executar scan">▶ SCAN</button>
+          <button class="btn btn-sm" onclick="openEditAlvo(${a.id})" title="Editar">✎</button>
+          <button class="btn btn-sm btn-danger" onclick="openDelModal(${a.id},'${a.ip||a.url}')" title="Excluir">✕</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderScans() {
+  const tbody = document.getElementById('scans-body');
+  if (!scansCache.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">◌</div>Nenhum scan realizado</div></td></tr>`;
+    return;
+  }
+  const sorted = [...scansCache].reverse();
+  tbody.innerHTML = sorted.map(s => `
+    <tr>
+      <td class="ts">${s.id}</td>
+      <td>${s.alvo?.url || '—'}</td>
+      <td class="ip-badge">${s.alvo?.ip || '—'}</td>
+      <td><span class="port-badge">${s.porta}</span></td>
+      <td class="service-badge">${s.servico}</td>
+      <td class="ts">${fmtDate(s.dataHora)}</td>
+    </tr>
+  `).join('');
+}
+
+function renderDashboard() {
+  const tbody = document.getElementById('dashboard-scans-body');
+  const last = [...scansCache].reverse().slice(0, 10);
+  if (!last.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">◌</div>Nenhum scan realizado ainda</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = last.map(s => `
+    <tr>
+      <td class="ts">${s.id}</td>
+      <td>${s.alvo?.url || '—'}</td>
+      <td class="ip-badge">${s.alvo?.ip || '—'}</td>
+      <td><span class="port-badge">${s.porta}</span></td>
+      <td class="service-badge">${s.servico}</td>
+      <td class="ts">${fmtDate(s.dataHora)}</td>
+    </tr>
+  `).join('');
+}
+
+// ---- SCAN ----
+async function runScan(id, btn) {
+  const orig = btn.innerHTML;
+  btn.innerHTML = '<span class="scanner-running">⟳ SCANNING...</span>';
+  btn.disabled = true;
+  try {
+    await apiFetch(`/Scan/post/${id}`, {method:'POST'});
+    toast('Scan concluído com sucesso!', 'success');
+    await loadScans();
+    updateStats();
+  } catch(e) {
+    toast(e.message || 'Erro ao executar scan', 'error');
+  } finally {
+    btn.innerHTML = orig;
+    btn.disabled = false;
+  }
+}
+
+// ---- ALVOS MODAL ----
+function openAlvoModal() {
+  document.getElementById('alvo-id').value = '';
+  document.getElementById('alvo-ip').value = '';
+  document.getElementById('alvo-url').value = '';
+  document.getElementById('alvo-modal-title').textContent = '// NOVO ALVO';
+  document.getElementById('alvo-modal').classList.add('open');
+}
+
+function openEditAlvo(id) {
+  const a = alvosCache.find(x => x.id === id);
+  if (!a) return;
+  document.getElementById('alvo-id').value = a.id;
+  document.getElementById('alvo-ip').value = a.ip || '';
+  document.getElementById('alvo-url').value = a.url || '';
+  document.getElementById('alvo-modal-title').textContent = '// EDITAR ALVO';
+  document.getElementById('alvo-modal').classList.add('open');
+}
+
+function closeAlvoModal() {
+  document.getElementById('alvo-modal').classList.remove('open');
+}
+
+async function saveAlvo() {
+  const id = document.getElementById('alvo-id').value;
+  const ip = document.getElementById('alvo-ip').value.trim();
+  const url = document.getElementById('alvo-url').value.trim();
+  if (!ip && !url) { toast('Informe IP ou URL', 'error'); return; }
+  const body = { ip: ip||null, url: url||null };
+  try {
+    if (id) {
+      await apiFetch('/Alvo/update', {method:'PUT', body: JSON.stringify({...body, id: Number(id)})});
+      toast('Alvo atualizado!', 'success');
+    } else {
+      await apiFetch('/Alvo/post', {method:'POST', body: JSON.stringify(body)});
+      toast('Alvo cadastrado!', 'success');
+    }
+    closeAlvoModal();
+    await loadAlvos();
+    updateStats();
+  } catch(e) {
+    toast(e.message || 'Erro ao salvar', 'error');
+  }
+}
+
+// ---- DELETE MODAL ----
+function openDelModal(id, info) {
+  deleteTargetId = id;
+  document.getElementById('del-alvo-info').textContent = info;
+  document.getElementById('del-modal').classList.add('open');
+}
+
+function closeDelModal() {
+  document.getElementById('del-modal').classList.remove('open');
+  deleteTargetId = null;
+}
+
+async function confirmDelete() {
+  if (!deleteTargetId) return;
+  try {
+    await apiFetch(`/Alvo/delete/${deleteTargetId}`, {method:'DELETE'});
+    toast('Alvo removido!', 'success');
+    closeDelModal();
+    await loadAlvos();
+    updateStats();
+  } catch(e) {
+    toast(e.message || 'Erro ao excluir', 'error');
+    closeDelModal();
+  }
+}
+
+// ---- TABS ----
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'scans') loadScans();
+  if (name === 'alvos') loadAlvos();
+}
+
+// Close modals on overlay click
+document.getElementById('alvo-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeAlvoModal(); });
+document.getElementById('del-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeDelModal(); });
+
+// Enter key support on login
+document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('reg-pass').addEventListener('keydown', e => { if(e.key==='Enter') doRegister(); });
+</script>
+</body>
+</html>

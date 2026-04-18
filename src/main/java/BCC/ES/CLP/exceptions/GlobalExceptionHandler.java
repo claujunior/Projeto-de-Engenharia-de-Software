@@ -66,4 +66,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());
     }
+    @ExceptionHandler(IpJaNaoExistente.class)
+    public ResponseEntity<String> handleIpJaNaoExistente(IpJaNaoExistente e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
+    @ExceptionHandler(UrlJaNaoExistente.class)
+    public ResponseEntity<String> handleIpJaNaoExistente(UrlJaNaoExistente e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
 }
