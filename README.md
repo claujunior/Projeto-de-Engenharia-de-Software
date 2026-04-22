@@ -28,18 +28,18 @@ chaveApi=sua-chave-da-openrouter
 ### 2. Subir o banco de dados com Docker
 
 ```shell
-docker compose up -d
+sudo docker compose up -d
 ```
 
 Para verificar que o container está rodando:
 
 ```shell
-docker ps
+sudo docker ps
 ```
 
 Para derrubar o container:
 ```shell
-docker compose down
+sudo docker compose down
 ```
 
 ---
@@ -47,8 +47,8 @@ docker compose down
 ### 3. Compilar e rodar a aplicação
 
 ```shell
-chmod +x mvnw
-export $(cat .env | xargs) && ./mvnw spring-boot:run
+sudo chmod +x mvnw
+sudo export $(cat .env | xargs) && ./mvnw spring-boot:run
 ```
 
 A aplicação vai iniciar na porta **8080**.
@@ -103,7 +103,7 @@ Em qualquer outra requisição no Postman, vá em:
 Abra o arquivo `index.html` na raiz do projeto diretamente no navegador:
 
 ```shell
-xdg-open index.html
+sudo xdg-open index.html
 ```
 
 Ou dê dois cliques no arquivo pelo gerenciador de arquivos.
