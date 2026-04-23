@@ -65,38 +65,13 @@ public class ServiceOrquestrador {
                 }
 
 
-                                //como tava antes
-                // Pattern pattern = Pattern.compile("(\\d+)/tcp\\s+open\\s+([^\\\\s]+)");
-                // // Pattern pattern = Pattern.compile("(\\d+)/tcp\\s+open\\s+(\\w+)");
-                // Matcher matcher = pattern.matcher(output);
-
-                // Set<String> portas = new LinkedHashSet<>();
-
-                // while (matcher.find()) {
-                //     portas.add(matcher.group(1) + ":" + matcher.group(2));
-                // }
-
-
-                // if (portas.isEmpty()) {
-                //     throw new PortasFechadas("Nenhuma porta aberta encontrada");
-                // }
-
-                
-                System.out.println("--- SAÍDA DO DOCKER ---");
-                System.out.println(output);
-                System.out.println("-----------------------");
-
-                Pattern pattern = Pattern.compile("(\\d+)/tcp\\s+open\\s+(.+)");
+                Pattern pattern = Pattern.compile("(\\d+)/tcp\\s+open\\s+(\\w+)");
                 Matcher matcher = pattern.matcher(output);
 
                 Set<String> portas = new LinkedHashSet<>();
 
                 while (matcher.find()) {
-                    String servicoLimpo = matcher.group(2).replaceAll("[\"'\n\r\\\\]", "").trim();
-                    
-                    if(servicoLimpo.contains(" ")) servicoLimpo = servicoLimpo.split(" ")[0];
-
-                    portas.add(matcher.group(1) + ":" + servicoLimpo);
+                    portas.add(matcher.group(1) + ":" + matcher.group(2));
                 }
 
 
@@ -104,15 +79,17 @@ public class ServiceOrquestrador {
                     throw new PortasFechadas("Nenhuma porta aberta encontrada");
                 }
 
+
                 return "{"
                         + "\"host\":\"" + repositoryAlvo.findById(id).get().getIp() + "\","
                         + "\"portas\":\"" + portas + "\""
                         + "}";
+
             } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ScanOrquestracaoException("Falha no scan em " + repositoryAlvo.findById(id).get().getIp(), e);
-        }
+                throw e;
+            } catch (Exception e) {
+                throw new ScanOrquestracaoException("Falha no scan em " + repositoryAlvo.findById(id).get().getIp(), e);
+            }
         });
     }
 }
