@@ -2,6 +2,7 @@ package BCC.ES.CLP.controller;
 
 import java.util.List;
 
+import BCC.ES.CLP.model.Select;
 import BCC.ES.CLP.service.ServiceOrquestrador;
 import BCC.ES.CLP.service.ServiceScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,10 @@ public class ControllerScan {
         return ResponseEntity.ok(serviceScan.allScan());
     }
 
-    @PostMapping("/post/{id}")
-    public ResponseEntity<String> executar(@PathVariable Long id) {
-        return ResponseEntity.ok(serviceScan.adicionarBd(serviceOrquestrador.executarScan(id).join()));
+    @PostMapping("/post/{id}/{tipo}")
+    public ResponseEntity<String> executar(@PathVariable Long id, @PathVariable String tipo) {
+        Select select = Select.valueOf(tipo.toUpperCase());
+        return ResponseEntity.ok(serviceScan.adicionarBd(serviceOrquestrador.executarScan(id,select).join()));
     }
 
     //http://localhost:8080/Scan/get

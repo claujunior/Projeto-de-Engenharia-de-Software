@@ -1,7 +1,6 @@
 package BCC.ES.CLP.service;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -13,6 +12,7 @@ import java.util.stream.Collectors;
 import BCC.ES.CLP.exceptions.AlvoNaoEncontradoException;
 import BCC.ES.CLP.exceptions.PortasFechadas;
 import BCC.ES.CLP.exceptions.TimeoutScan;
+import BCC.ES.CLP.model.Select;
 import BCC.ES.CLP.repository.RepositoryAlvo;
 import org.springframework.stereotype.Service;
 
@@ -22,28 +22,25 @@ import BCC.ES.CLP.model.Alvo;
 @Service
 public class ServiceOrquestrador {
 
-    private static final String base_Dir = System.getProperty("user.dir");
-    private static final String infra_Dir = base_Dir + "/infra";
-
     private final RepositoryAlvo repositoryAlvo;
 
     public ServiceOrquestrador(RepositoryAlvo repositoryAlvo){
         this.repositoryAlvo = repositoryAlvo;
     }
-    public CompletableFuture<String> executarScan(Long id) {
+    public CompletableFuture<String> executarScan(Long id, Select select) {
         return CompletableFuture.supplyAsync(() -> {
             try {
+                Alvo alvo = repositoryAlvo.findById(id)
+                        .orElseThrow(AlvoNaoEncontradoException::new);
 
-                if(repositoryAlvo.findById(id).isEmpty()){
-                    throw new AlvoNaoEncontradoException();
-                }
+
                 String[] command = {
                         "docker", "run", "--rm", "--network", "host",
-                        "-v", infra_Dir + ":/app/infra",
+                        "-v", select.getInfra_Dir() + ":/app/infra",
                         "scanner-image",
                         "ansible-playbook",
-                        "-i", repositoryAlvo.findById(id).get().getIp() + ",",
-                        "/app/infra/playbooks/nmapscan.yml"
+                        "-i", alvo.getIp() + ",",
+                        select.getAnsible()
                 };
 
                 Process process = new ProcessBuilder(command)
@@ -81,7 +78,7 @@ public class ServiceOrquestrador {
 
 
                 return "{"
-                        + "\"host\":\"" + repositoryAlvo.findById(id).get().getIp() + "\","
+                        + "\"host\":\"" + alvo.getIp() + "\","
                         + "\"portas\":\"" + portas + "\""
                         + "}";
 
