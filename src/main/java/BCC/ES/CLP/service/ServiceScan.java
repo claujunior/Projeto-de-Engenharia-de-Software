@@ -4,6 +4,7 @@ import BCC.ES.CLP.exceptions.ErroAoEncontrarIp;
 import BCC.ES.CLP.exceptions.ScanOrquestracaoException;
 import BCC.ES.CLP.model.Alvo;
 import BCC.ES.CLP.model.Scan;
+import BCC.ES.CLP.model.Select;
 import BCC.ES.CLP.repository.RepositoryAlvo;
 import BCC.ES.CLP.repository.RepositoryScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,15 @@ import java.util.Optional;
 public class ServiceScan {
 
     private final RepositoryScan repositoryScan;
-
+    private final ServiceOrquestrador serviceOrquestrador;
     private final RepositoryAlvo repositoryAlvo;
     private final LlmService llmService;
 
-    public ServiceScan(RepositoryScan repositoryScan,RepositoryAlvo repositoryAlvo,LlmService llmService){
+    public ServiceScan(RepositoryScan repositoryScan,RepositoryAlvo repositoryAlvo,LlmService llmService,ServiceOrquestrador serviceOrquestrador){
         this.repositoryScan=repositoryScan;
         this.repositoryAlvo=repositoryAlvo;
         this.llmService=llmService;
+        this.serviceOrquestrador=serviceOrquestrador;
     }
 
     @Transactional(readOnly = true)
@@ -34,7 +36,7 @@ public class ServiceScan {
         return repositoryScan.findAll();
     }
 
-    @Transactional
+
     public String adicionarBd(String jsonString) {
         ObjectMapper mapper = new ObjectMapper();
 
@@ -67,5 +69,13 @@ public class ServiceScan {
             repositoryScan.save(new Scan(null, null, port,service,optional.get()));
         }
         return llmService.perguntar(jsonString + " faça um relatorio sobre as portas e os servicos e e diga as vulnerabilidades de seguranca");
+    }
+
+    @Transactional
+    public String seletor(Long id, Select select){
+        if(select.getTipo().equals("scan")){
+            return adicionarBd(serviceOrquestrador.executarScan(id,select).join());
+        }
+        return "Erro";
     }
 }

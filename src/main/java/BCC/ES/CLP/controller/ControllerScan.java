@@ -37,7 +37,7 @@ public class ControllerScan {
     @PostMapping("/post/{id}/{tipo}")
     public ResponseEntity<String> executar(@PathVariable Long id, @PathVariable String tipo) {
         Select select = Select.valueOf(tipo.toUpperCase());
-        return ResponseEntity.ok(serviceScan.adicionarBd(serviceOrquestrador.executarScan(id,select).join()));
+        return ResponseEntity.ok(serviceScan.seletor(id,select));
     }
 
     //http://localhost:8080/Scan/get
