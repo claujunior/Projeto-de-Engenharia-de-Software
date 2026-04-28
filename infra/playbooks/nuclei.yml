@@ -1,0 +1,16 @@
+---
+- name: Nuclei Audit (web vuln scan)
+  hosts: all
+  gather_facts: false
+  vars:
+    nuclei_target: "{{ target | default(inventory_hostname) }}"
+    nuclei_templates: "{{ templates | default('') }}"
+  tasks:
+    - name: Executar Nuclei contra o Alvo
+      command: "nuclei -u {{ inventory_hostname }} -j -silent -severity low,medium,high,critical"
+      register: nuclei_raw
+      ignore_errors: true
+
+    - name: Imprimir saída do nuclei (stdout)
+      debug:
+        msg: "{{ nuclei_raw.stdout }}"
