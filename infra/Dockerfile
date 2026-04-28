@@ -10,6 +10,12 @@ RUN apt-get update && apt-get install -y \
     openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
+RUN wget https://github.com/projectdiscovery/nuclei/releases/download/v3.2.0/nuclei_3.2.0_linux_amd64.zip \
+    && unzip nuclei_3.2.0_linux_amd64.zip \
+    && mv nuclei /usr/local/bin/ \
+    && chmod +x /usr/local/bin/nuclei \
+    && rm -f nuclei_3.2.0_linux_amd64.zip
+    
 WORKDIR /app
 
 ENV ANSIBLE_STDOUT_CALLBACK=json
