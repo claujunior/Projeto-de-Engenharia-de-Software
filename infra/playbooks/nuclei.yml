@@ -1,6 +1,7 @@
 ---
 - name: Nuclei Audit (web vuln scan)
   hosts: all
+  connection: local
   gather_facts: false
   vars:
     nuclei_target: "{{ target | default(inventory_hostname) }}"

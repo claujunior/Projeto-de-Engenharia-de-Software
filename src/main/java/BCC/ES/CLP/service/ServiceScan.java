@@ -1,81 +1,52 @@
 package BCC.ES.CLP.service;
 
-import BCC.ES.CLP.exceptions.ErroAoEncontrarIp;
-import BCC.ES.CLP.exceptions.ScanOrquestracaoException;
-import BCC.ES.CLP.model.Alvo;
+import BCC.ES.CLP.dto.ScanRawResult;
 import BCC.ES.CLP.model.Scan;
 import BCC.ES.CLP.model.Select;
-import BCC.ES.CLP.repository.RepositoryAlvo;
+import BCC.ES.CLP.model.Vulnerabilidade;
 import BCC.ES.CLP.repository.RepositoryScan;
-import org.springframework.beans.factory.annotation.Autowired;
+import BCC.ES.CLP.repository.RepositoryVulnerabilidade;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ServiceScan {
 
     private final RepositoryScan repositoryScan;
+    private final RepositoryVulnerabilidade repositoryVulnerabilidade;
     private final ServiceOrquestrador serviceOrquestrador;
-    private final RepositoryAlvo repositoryAlvo;
-    private final LlmService llmService;
+    private final ServiceNmap serviceNmap;
+    private final ServiceNuclei serviceNuclei;
 
-    public ServiceScan(RepositoryScan repositoryScan,RepositoryAlvo repositoryAlvo,LlmService llmService,ServiceOrquestrador serviceOrquestrador){
-        this.repositoryScan=repositoryScan;
-        this.repositoryAlvo=repositoryAlvo;
-        this.llmService=llmService;
-        this.serviceOrquestrador=serviceOrquestrador;
+    public ServiceScan(RepositoryScan repositoryScan,
+                       RepositoryVulnerabilidade repositoryVulnerabilidade,
+                       ServiceOrquestrador serviceOrquestrador,
+                       ServiceNmap serviceNmap,
+                       ServiceNuclei serviceNuclei) {
+        this.repositoryScan = repositoryScan;
+        this.repositoryVulnerabilidade = repositoryVulnerabilidade;
+        this.serviceOrquestrador = serviceOrquestrador;
+        this.serviceNmap = serviceNmap;
+        this.serviceNuclei = serviceNuclei;
     }
 
     @Transactional(readOnly = true)
-    public List<Scan> allScan(){
+    public List<Scan> allScan() {
         return repositoryScan.findAll();
     }
 
-
-    public String adicionarBd(String jsonString) {
-        ObjectMapper mapper = new ObjectMapper();
-
-        JsonNode root;
-        try {
-            root = mapper.readTree(jsonString);
-        } catch (Exception e) {
-            throw new ScanOrquestracaoException("JSON de resultado inválido: " + e.getMessage(), e);
-        }
-
-        String host = root.get("host").asText();
-        String portasStr = root.get("portas").asText();
-
-
-        portasStr = portasStr.replace("[", "").replace("]", "");
-
-
-        String[] entries = portasStr.split(",");
-        Optional<Alvo> optional = repositoryAlvo.findByIp(host);
-        if(optional.isEmpty()){
-            throw new ErroAoEncontrarIp("Esse Ip não existe no banco de dados");
-        }
-
-        for (String entry : entries) {
-            String[] parts = entry.trim().split(":");
-
-            int port = Integer.parseInt(parts[0]);
-            String service = parts[1];
-
-            repositoryScan.save(new Scan(null, null, port,service,optional.get()));
-        }
-        return llmService.perguntar(jsonString + " faça um relatorio sobre as portas e os servicos e e diga as vulnerabilidades de seguranca");
+    @Transactional(readOnly = true)
+    public List<Vulnerabilidade> allVulnerabilidades() {
+        return repositoryVulnerabilidade.findAll();
     }
 
-    @Transactional
-    public String seletor(Long id, Select select){
-        if(select.getTipo().equals("scan")){
-            return adicionarBd(serviceOrquestrador.executarScan(id,select).join());
-        }
-        return "Erro";
+    public String seletor(Long id, Select select) {
+        ScanRawResult resultado = serviceOrquestrador.executarScan(id, select).join();
+        return switch (select) {
+            case NMAP   -> serviceNmap.processar(resultado);
+            case NUCLEI -> serviceNuclei.processar(resultado);
+        };
     }
 }

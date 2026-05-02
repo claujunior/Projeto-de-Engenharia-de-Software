@@ -12,5 +12,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  scanner:
+    image: scanner-image
+    build:
+      context: ./infra
+
 volumes:
   postgres_data:

@@ -18,6 +18,12 @@
     --muted: #4a5568;
     --mono: 'Share Tech Mono', monospace;
     --sans: 'Syne', sans-serif;
+
+    --sev-info: #4a5568;
+    --sev-low: #00c8ff;
+    --sev-medium: #ffa502;
+    --sev-high: #ff7849;
+    --sev-critical: #ff4757;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,7 +36,6 @@
     overflow-x: hidden;
   }
 
-  /* ---- GRID BACKGROUND ---- */
   body::before {
     content: '';
     position: fixed;
@@ -43,487 +48,301 @@
     z-index: 0;
   }
 
-  /* ---- AUTH SCREEN ---- */
+  /* ---- AUTH ---- */
   #auth-screen {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    background: var(--bg);
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100; background: var(--bg);
   }
-
   .auth-box {
     background: var(--surface);
     border: 1px solid var(--border);
     border-top: 2px solid var(--accent);
     padding: 2.5rem 3rem;
-    width: 100%;
-    max-width: 420px;
+    width: 100%; max-width: 420px;
     position: relative;
   }
-
   .auth-box::before {
-    content: '';
-    position: absolute;
-    top: -1px; left: 0; right: 0;
-    height: 2px;
+    content: ''; position: absolute;
+    top: -1px; left: 0; right: 0; height: 2px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
   }
-
   .auth-logo {
-    font-family: var(--mono);
-    color: var(--accent);
-    font-size: 1.1rem;
-    margin-bottom: 0.25rem;
-    letter-spacing: 2px;
+    font-family: var(--mono); color: var(--accent);
+    font-size: 1.1rem; margin-bottom: 0.25rem; letter-spacing: 2px;
   }
-
-  .auth-title {
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin-bottom: 2rem;
-    color: #fff;
-  }
-
-  .auth-tabs {
-    display: flex;
-    gap: 0;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
-  }
-
+  .auth-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 2rem; color: #fff; }
+  .auth-tabs { display: flex; margin-bottom: 2rem; border-bottom: 1px solid var(--border); }
   .auth-tab {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-family: var(--sans);
-    font-size: 0.9rem;
-    font-weight: 700;
-    padding: 0.5rem 1.2rem;
-    cursor: pointer;
-    letter-spacing: 1px;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: all 0.2s;
+    background: none; border: none; color: var(--muted);
+    font-family: var(--sans); font-size: 0.9rem; font-weight: 700;
+    padding: 0.5rem 1.2rem; cursor: pointer; letter-spacing: 1px;
+    border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s;
   }
+  .auth-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-  .auth-tab.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
-
-  .form-group {
-    margin-bottom: 1.2rem;
-  }
-
+  .form-group { margin-bottom: 1.2rem; }
   label {
-    display: block;
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    color: var(--muted);
-    letter-spacing: 1.5px;
-    margin-bottom: 0.4rem;
-    text-transform: uppercase;
+    display: block; font-family: var(--mono); font-size: 0.72rem;
+    color: var(--muted); letter-spacing: 1.5px; margin-bottom: 0.4rem; text-transform: uppercase;
   }
-
   input {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 0.9rem;
-    padding: 0.7rem 1rem;
-    outline: none;
-    transition: border-color 0.2s;
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    color: var(--text); font-family: var(--mono); font-size: 0.9rem;
+    padding: 0.7rem 1rem; outline: none; transition: border-color 0.2s;
   }
-
   input:focus { border-color: var(--accent); }
 
   .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: none;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    font-family: var(--mono);
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-    padding: 0.7rem 1.5rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: none; border: 1px solid var(--accent); color: var(--accent);
+    font-family: var(--mono); font-size: 0.85rem; letter-spacing: 1px;
+    padding: 0.7rem 1.5rem; cursor: pointer; transition: all 0.2s; text-transform: uppercase;
   }
-
   .btn:hover { background: var(--accent); color: var(--bg); }
-
   .btn-full { width: 100%; justify-content: center; }
-
   .btn-danger { border-color: var(--danger); color: var(--danger); }
   .btn-danger:hover { background: var(--danger); color: #fff; }
-
   .btn-warn { border-color: var(--warn); color: var(--warn); }
   .btn-warn:hover { background: var(--warn); color: var(--bg); }
-
+  .btn-info { border-color: var(--accent2); color: var(--accent2); }
+  .btn-info:hover { background: var(--accent2); color: var(--bg); }
   .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.75rem; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  .auth-msg {
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    padding: 0.6rem;
-    margin-top: 1rem;
-    display: none;
-  }
-
+  .auth-msg { font-family: var(--mono); font-size: 0.8rem; padding: 0.6rem; margin-top: 1rem; display: none; }
   .auth-msg.error { color: var(--danger); border: 1px solid var(--danger); }
   .auth-msg.success { color: var(--accent); border: 1px solid var(--accent); }
 
   /* ---- APP ---- */
   #app { display: none; position: relative; z-index: 1; }
 
-  /* ---- TOPBAR ---- */
   .topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    position: sticky;
-    top: 0;
-    z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem; border-bottom: 1px solid var(--border);
+    background: var(--surface); position: sticky; top: 0; z-index: 50;
   }
-
-  .topbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
+  .topbar-brand { display: flex; align-items: center; gap: 1rem; }
   .brand-icon {
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--accent);
-    font-size: 1.1rem;
+    width: 36px; height: 36px; border: 1px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); font-size: 1.1rem;
   }
+  .brand-name { font-family: var(--mono); font-size: 1rem; color: var(--accent); letter-spacing: 3px; }
+  .brand-sub { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 2px; margin-top: 1px; }
+  .topbar-right { display: flex; align-items: center; gap: 1.5rem; }
+  .user-pill { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); border: 1px solid var(--border); padding: 0.3rem 0.8rem; }
 
-  .brand-name {
-    font-family: var(--mono);
-    font-size: 1rem;
-    color: var(--accent);
-    letter-spacing: 3px;
-  }
-
-  .brand-sub {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 2px;
-    margin-top: 1px;
-  }
-
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .user-pill {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    padding: 0.3rem 0.8rem;
-  }
-
-  /* ---- NAV TABS ---- */
-  .nav-tabs {
-    display: flex;
-    gap: 0;
-    border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
-    background: var(--surface);
-  }
-
+  .nav-tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 2rem; background: var(--surface); }
   .nav-tab {
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    letter-spacing: 1.5px;
-    padding: 0.9rem 1.5rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: -1px;
-    text-transform: uppercase;
+    background: none; border: none; border-bottom: 2px solid transparent;
+    color: var(--muted); font-family: var(--mono); font-size: 0.8rem;
+    letter-spacing: 1.5px; padding: 0.9rem 1.5rem; cursor: pointer;
+    transition: all 0.2s; margin-bottom: -1px; text-transform: uppercase;
   }
-
   .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-  /* ---- MAIN CONTENT ---- */
-  .main { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+  .main { padding: 2rem; max-width: 1200px; margin: 0 auto; }
 
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-  }
-
-  .section-title {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  .section-title span {
-    color: var(--accent);
-    margin-right: 0.5rem;
-  }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+  .section-title { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+  .section-title span { color: var(--accent); margin-right: 0.5rem; }
 
   /* ---- TABLE ---- */
-  .table-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    overflow: auto;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: var(--mono);
-    font-size: 0.82rem;
-  }
-
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); overflow: auto; }
+  table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.82rem; }
   thead th {
-    background: #0d1117;
-    color: var(--muted);
-    font-size: 0.68rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 0.75rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
+    background: #0d1117; color: var(--muted); font-size: 0.68rem;
+    letter-spacing: 2px; text-transform: uppercase; padding: 0.75rem 1rem;
+    text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap;
   }
-
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-  }
-
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: rgba(0,255,157,0.03); }
+  td { padding: 0.8rem 1rem; color: var(--text); vertical-align: middle; }
 
-  td {
-    padding: 0.8rem 1rem;
-    color: var(--text);
-    vertical-align: middle;
-  }
-
-  .ip-badge {
-    color: var(--accent2);
-  }
-
+  .ip-badge { color: var(--accent2); }
   .port-badge {
+    display: inline-block;
     background: rgba(0,200,255,0.1);
     color: var(--accent2);
-    padding: 0.15rem 0.5rem;
-    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    margin: 0.15rem 0.2rem 0.15rem 0;
+    font-family: var(--mono); font-size: 0.78rem;
   }
-
-  .service-badge {
-    color: var(--accent);
-  }
-
-  .ts {
-    color: var(--muted);
-    font-size: 0.75rem;
-  }
+  .service-badge { color: var(--accent); }
+  .ts { color: var(--muted); font-size: 0.75rem; }
 
   /* ---- MODAL ---- */
   .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(4px);
-    z-index: 200;
-    display: none;
-    align-items: center;
-    justify-content: center;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+    z-index: 200; display: none; align-items: center; justify-content: center;
   }
-
   .modal-overlay.open { display: flex; }
-
   .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-top: 2px solid var(--accent);
-    padding: 2rem;
-    width: 100%;
-    max-width: 460px;
-    position: relative;
-    animation: modalIn 0.2s ease;
+    background: var(--surface); border: 1px solid var(--border);
+    border-top: 2px solid var(--accent); padding: 2rem;
+    width: 100%; max-width: 460px; position: relative; animation: modalIn 0.2s ease;
   }
+  @keyframes modalIn { from { transform: translateY(-16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-title { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 2px; margin-bottom: 1.5rem; text-transform: uppercase; }
+  .modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; justify-content: flex-end; }
 
-  @keyframes modalIn {
-    from { transform: translateY(-16px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+  .modal.modal-lg { max-width: 760px; }
+
+  .report-meta {
+    font-family: var(--mono); font-size: 0.78rem;
+    color: var(--muted); margin-bottom: 1rem;
   }
-
-  .modal-title {
+  .report-meta .tag {
+    display: inline-block; border: 1px solid var(--accent); color: var(--accent);
+    padding: 0.15rem 0.5rem; margin-right: 0.4rem; letter-spacing: 1.5px;
+  }
+  .report-body {
     font-family: var(--mono);
-    font-size: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.55;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    max-height: 60vh;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .report-body.loading {
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    min-height: 200px;
+    white-space: normal;
     color: var(--muted);
-    letter-spacing: 2px;
-    margin-bottom: 1.5rem;
-    text-transform: uppercase;
   }
+  .report-body.error { color: var(--danger); }
 
-  .modal-actions {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 1.5rem;
-    justify-content: flex-end;
+  .scan-type-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .scan-type-card {
+    border: 1px solid var(--border); padding: 1rem 1.25rem; cursor: pointer;
+    transition: all 0.15s; background: var(--bg);
   }
+  .scan-type-card:hover { border-color: var(--accent); background: rgba(0,255,157,0.03); }
+  .scan-type-card .stc-name { font-family: var(--mono); color: var(--accent); font-size: 0.95rem; letter-spacing: 1.5px; }
+  .scan-type-card .stc-desc { font-family: var(--mono); color: var(--muted); font-size: 0.75rem; margin-top: 0.3rem; }
 
   /* ---- EMPTY STATE ---- */
-  .empty {
-    text-align: center;
-    padding: 4rem 2rem;
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-  }
-
+  .empty { text-align: center; padding: 3rem 2rem; color: var(--muted); font-family: var(--mono); font-size: 0.8rem; letter-spacing: 1px; }
   .empty-icon { font-size: 2rem; margin-bottom: 0.75rem; opacity: 0.3; }
 
-  /* ---- LOADING / STATUS ---- */
+  /* ---- STATUS BAR ---- */
   .status-bar {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    color: var(--muted);
-    padding: 0.5rem 2rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    font-family: var(--mono); font-size: 0.72rem; color: var(--muted);
+    padding: 0.5rem 2rem; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0.75rem;
   }
-
-  .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 1.5s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
   .dot.red { background: var(--danger); animation: none; }
 
+  /* ---- TOAST ---- */
   .toast {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    padding: 0.75rem 1.25rem;
-    z-index: 999;
-    animation: toastIn 0.3s ease;
-    max-width: 300px;
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent); font-family: var(--mono);
+    font-size: 0.8rem; padding: 0.75rem 1.25rem;
+    z-index: 999; animation: toastIn 0.3s ease; max-width: 300px;
   }
-
   .toast.error { border-left-color: var(--danger); color: var(--danger); }
   .toast.success { border-left-color: var(--accent); color: var(--accent); }
-
-  @keyframes toastIn {
-    from { transform: translateX(20px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-  }
+  @keyframes toastIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
   .spinner {
-    display: inline-block;
-    width: 14px; height: 14px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
+    display: inline-block; width: 14px; height: 14px;
+    border: 2px solid var(--border); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 0.6s linear infinite;
   }
-
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ---- STATS ROW ---- */
+  /* ---- STATS ---- */
   .stats-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-bottom: 2rem;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1rem; margin-bottom: 2rem;
   }
-
   .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 1.25rem 1.5rem;
-    position: relative;
-    overflow: hidden;
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 1.25rem 1.5rem; position: relative; overflow: hidden;
   }
-
   .stat-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, var(--accent), transparent);
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 1px; background: linear-gradient(90deg, var(--accent), transparent);
   }
+  .stat-card.danger::after { background: linear-gradient(90deg, var(--danger), transparent); }
+  .stat-label { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .stat-value { font-family: var(--mono); font-size: 2rem; color: var(--accent); font-weight: 700; line-height: 1; }
+  .stat-card.danger .stat-value { color: var(--danger); }
 
-  .stat-label {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-  }
-
-  .stat-value {
-    font-family: var(--mono);
-    font-size: 2rem;
-    color: var(--accent);
-    font-weight: 700;
-    line-height: 1;
-  }
-
-  /* sections */
   .tab-content { display: none; }
   .tab-content.active { display: block; }
 
-  /* scan running indicator */
-  .scan-running {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    color: var(--warn);
+  /* ---- ALVO CARDS (DASHBOARD) ---- */
+  .alvo-list { display: flex; flex-direction: column; gap: 1.25rem; }
+  .alvo-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
   }
+  .alvo-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.25rem; border-bottom: 1px solid var(--border);
+    flex-wrap: wrap; gap: 0.75rem;
+  }
+  .alvo-card-id {
+    font-family: var(--mono); font-size: 0.7rem;
+    color: var(--muted); letter-spacing: 2px;
+  }
+  .alvo-card-title {
+    font-family: var(--mono); color: var(--accent2);
+    font-size: 1rem; letter-spacing: 1px;
+  }
+  .alvo-card-url { font-family: var(--mono); color: var(--muted); font-size: 0.78rem; margin-top: 0.2rem; }
+  .alvo-card-meta { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+
+  .alvo-section {
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px dashed var(--border);
+  }
+  .alvo-section:last-child { border-bottom: none; }
+  .alvo-section-title {
+    font-family: var(--mono); font-size: 0.7rem;
+    color: var(--muted); letter-spacing: 2px;
+    margin-bottom: 0.6rem; text-transform: uppercase;
+  }
+  .alvo-section-title .count {
+    color: var(--accent); margin-left: 0.4rem;
+  }
+  .alvo-section-empty { font-family: var(--mono); color: var(--muted); font-size: 0.75rem; opacity: 0.7; }
+
+  /* ---- VULN ITEM ---- */
+  .vuln-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .vuln-item {
+    display: flex; gap: 0.75rem; align-items: flex-start;
+    font-family: var(--mono); font-size: 0.8rem;
+    padding: 0.5rem 0.6rem; background: var(--bg); border: 1px solid var(--border);
+  }
+  .vuln-sev {
+    flex-shrink: 0;
+    font-size: 0.65rem; letter-spacing: 1.5px;
+    padding: 0.2rem 0.5rem;
+    text-transform: uppercase; font-weight: 700;
+  }
+  .sev-info     { background: rgba(74,85,104,0.2);  color: var(--sev-info); border: 1px solid var(--sev-info); }
+  .sev-low      { background: rgba(0,200,255,0.1);  color: var(--sev-low); border: 1px solid var(--sev-low); }
+  .sev-medium   { background: rgba(255,165,2,0.1);  color: var(--sev-medium); border: 1px solid var(--sev-medium); }
+  .sev-high     { background: rgba(255,120,73,0.1); color: var(--sev-high); border: 1px solid var(--sev-high); }
+  .sev-critical { background: rgba(255,71,87,0.15); color: var(--sev-critical); border: 1px solid var(--sev-critical); }
+
+  .vuln-body { flex: 1; min-width: 0; }
+  .vuln-name { color: var(--text); }
+  .vuln-template { color: var(--muted); font-size: 0.72rem; }
+  .vuln-where { color: var(--accent2); font-size: 0.72rem; word-break: break-all; }
 </style>
 </head>
 <body>
@@ -538,7 +357,6 @@
       <button class="auth-tab" onclick="switchAuthTab('register')">REGISTER</button>
     </div>
 
-    <!-- Login form -->
     <div id="login-form">
       <div class="form-group">
         <label>Usuário</label>
@@ -554,11 +372,14 @@
       <div class="auth-msg" id="login-msg"></div>
     </div>
 
-    <!-- Register form -->
     <div id="register-form" style="display:none">
       <div class="form-group">
         <label>Usuário</label>
         <input type="text" id="reg-user" placeholder="novo_usuario" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>CPF</label>
+        <input type="text" id="reg-cpf" placeholder="12345678900" maxlength="14" inputmode="numeric">
       </div>
       <div class="form-group">
         <label>Senha</label>
@@ -594,9 +415,9 @@
   </div>
 
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('dashboard')">DASHBOARD</button>
-    <button class="nav-tab" onclick="switchTab('alvos')">ALVOS</button>
-    <button class="nav-tab" onclick="switchTab('scans')">HISTÓRICO DE SCANS</button>
+    <button class="nav-tab active" onclick="switchTab('dashboard', event)">DASHBOARD</button>
+    <button class="nav-tab" onclick="switchTab('alvos', event)">ALVOS</button>
+    <button class="nav-tab" onclick="switchTab('scans', event)">HISTÓRICO</button>
   </div>
 
   <div class="main">
@@ -609,34 +430,25 @@
           <div class="stat-value" id="stat-alvos">—</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Scans realizados</div>
+          <div class="stat-label">Scans NMAP</div>
           <div class="stat-value" id="stat-scans">—</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Portas encontradas</div>
           <div class="stat-value" id="stat-portas">—</div>
         </div>
+        <div class="stat-card danger">
+          <div class="stat-label">Vulnerabilidades</div>
+          <div class="stat-value" id="stat-vulns">—</div>
+        </div>
       </div>
 
       <div class="section-header">
-        <div class="section-title"><span>//</span> ÚLTIMOS SCANS</div>
+        <div class="section-title"><span>//</span> RESULTADOS POR ALVO</div>
+        <button class="btn btn-sm" onclick="loadAll()">↻ ATUALIZAR</button>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>ALVO</th>
-              <th>IP</th>
-              <th>PORTA</th>
-              <th>SERVIÇO</th>
-              <th>DATA/HORA</th>
-            </tr>
-          </thead>
-          <tbody id="dashboard-scans-body">
-            <tr><td colspan="6"><div class="empty"><div class="empty-icon">◌</div>Carregando...</div></td></tr>
-          </tbody>
-        </table>
+      <div id="dashboard-alvos" class="alvo-list">
+        <div class="empty"><div class="empty-icon">◌</div>Carregando...</div>
       </div>
     </div>
 
@@ -664,13 +476,17 @@
       </div>
     </div>
 
-    <!-- SCANS -->
+    <!-- HISTÓRICO -->
     <div class="tab-content" id="tab-scans">
       <div class="section-header">
-        <div class="section-title"><span>//</span> HISTÓRICO DE SCANS</div>
-        <button class="btn" onclick="loadScans()">↻ ATUALIZAR</button>
+        <div class="section-title"><span>//</span> HISTÓRICO COMPLETO</div>
+        <button class="btn" onclick="loadAll()">↻ ATUALIZAR</button>
       </div>
-      <div class="table-wrap">
+
+      <div class="section-header" style="margin-top:0.5rem;margin-bottom:0.6rem;">
+        <div class="section-title"><span>//</span> PORTAS DETECTADAS (NMAP)</div>
+      </div>
+      <div class="table-wrap" style="margin-bottom:1.5rem;">
         <table>
           <thead>
             <tr>
@@ -684,6 +500,29 @@
           </thead>
           <tbody id="scans-body">
             <tr><td colspan="6"><div class="empty"><div class="empty-icon">◌</div>Carregando...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-header" style="margin-bottom:0.6rem;">
+        <div class="section-title"><span>//</span> VULNERABILIDADES (NUCLEI)</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>ALVO</th>
+              <th>IP</th>
+              <th>SEVERIDADE</th>
+              <th>NOME</th>
+              <th>TEMPLATE</th>
+              <th>ENCONTRADO EM</th>
+              <th>DATA/HORA</th>
+            </tr>
+          </thead>
+          <tbody id="vulns-body">
+            <tr><td colspan="8"><div class="empty"><div class="empty-icon">◌</div>Carregando...</div></td></tr>
           </tbody>
         </table>
       </div>
@@ -724,13 +563,51 @@
   </div>
 </div>
 
+<!-- =================== MODAL ESCOLHER TIPO DE SCAN =================== -->
+<div class="modal-overlay" id="scan-type-modal">
+  <div class="modal">
+    <div class="modal-title">// ESCOLHA O TIPO DE SCAN</div>
+    <p style="font-family:var(--mono);font-size:0.78rem;color:var(--muted);margin-bottom:1rem;">
+      Alvo: <span id="scan-type-alvo" style="color:var(--accent2)"></span>
+    </p>
+    <div class="scan-type-list" id="scan-type-list">
+      <!-- preenchido via JS -->
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" onclick="closeScanTypeModal()">CANCELAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- =================== MODAL RELATÓRIO =================== -->
+<div class="modal-overlay" id="report-modal">
+  <div class="modal modal-lg">
+    <div class="modal-title" id="report-modal-title">// RELATÓRIO DO SCAN</div>
+    <div class="report-meta" id="report-modal-meta"></div>
+    <div class="report-body" id="report-modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeReportModal()">FECHAR</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const API = 'http://localhost:8080';
 let token = '';
 let currentUser = '';
 let deleteTargetId = null;
-let scansCache = [];
+let scanTargetId = null;
+
 let alvosCache = [];
+let scansCache = [];
+let vulnsCache = [];
+
+// Tipos de scan disponíveis. Para adicionar um novo playbook:
+// adicione um item aqui e o backend já roteia pelo enum Select.
+const SCAN_TYPES = [
+  { id: 'nmap',   nome: 'NMAP',   desc: 'Varredura de portas TCP e identificação de serviços' },
+  { id: 'nuclei', nome: 'NUCLEI', desc: 'Detecção de vulnerabilidades web (CVEs, misconfigs)' }
+];
 
 // ---- UTILS ----
 function toast(msg, type='success') {
@@ -751,6 +628,13 @@ function setStatus(ok) {
 function fmtDate(d) {
   if (!d) return '—';
   return d.replace('T', ' ').substring(0, 16);
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+    .replaceAll('"','&quot;').replaceAll("'",'&#39;');
 }
 
 // ---- AUTH ----
@@ -795,7 +679,7 @@ async function doRegister() {
     const res = await fetch(`${API}/auth/register`, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({username, password})
+      body: JSON.stringify({login: username, senha: password})
     });
     if (!res.ok) throw new Error(await res.text());
     showMsg(msg, 'Conta criada! Faça login.', 'success');
@@ -847,9 +731,10 @@ async function apiFetch(path, opts={}) {
 // ---- LOAD DATA ----
 async function loadAll() {
   try {
-    await Promise.all([loadAlvos(), loadScans()]);
+    await Promise.all([loadAlvos(), loadScans(), loadVulns()]);
     setStatus(true);
     updateStats();
+    renderDashboard();
   } catch(e) {
     setStatus(false);
   }
@@ -861,18 +746,28 @@ async function loadAlvos() {
     renderAlvos();
   } catch(e) {
     document.getElementById('alvos-body').innerHTML =
-      `<tr><td colspan="5"><div class="empty"><div class="empty-icon">⚠</div>${e.message}</div></td></tr>`;
+      `<tr><td colspan="5"><div class="empty"><div class="empty-icon">⚠</div>${escapeHtml(e.message)}</div></td></tr>`;
   }
 }
 
 async function loadScans() {
   try {
     scansCache = await apiFetch('/Scan/get');
-    renderScans();
-    renderDashboard();
+    renderScansHistory();
   } catch(e) {
     document.getElementById('scans-body').innerHTML =
-      `<tr><td colspan="6"><div class="empty"><div class="empty-icon">⚠</div>${e.message}</div></td></tr>`;
+      `<tr><td colspan="6"><div class="empty"><div class="empty-icon">⚠</div>${escapeHtml(e.message)}</div></td></tr>`;
+  }
+}
+
+async function loadVulns() {
+  try {
+    vulnsCache = await apiFetch('/Vulnerabilidade/get');
+    renderVulnsHistory();
+  } catch(e) {
+    vulnsCache = [];
+    document.getElementById('vulns-body').innerHTML =
+      `<tr><td colspan="8"><div class="empty"><div class="empty-icon">⚠</div>${escapeHtml(e.message)}</div></td></tr>`;
   }
 }
 
@@ -881,9 +776,10 @@ function updateStats() {
   document.getElementById('stat-scans').textContent = scansCache.length;
   const portas = new Set(scansCache.map(s => s.porta));
   document.getElementById('stat-portas').textContent = portas.size;
+  document.getElementById('stat-vulns').textContent = vulnsCache.length;
 }
 
-// ---- RENDER ----
+// ---- RENDER ALVOS (tab Alvos) ----
 function renderAlvos() {
   const tbody = document.getElementById('alvos-body');
   if (!alvosCache.length) {
@@ -893,74 +789,239 @@ function renderAlvos() {
   tbody.innerHTML = alvosCache.map(a => `
     <tr>
       <td class="ts">${a.id}</td>
-      <td class="ip-badge">${a.ip || '—'}</td>
-      <td>${a.url || '—'}</td>
+      <td class="ip-badge">${escapeHtml(a.ip) || '—'}</td>
+      <td>${escapeHtml(a.url) || '—'}</td>
       <td class="ts">${fmtDate(a.dataHoraCadastro)}</td>
       <td>
         <div style="display:flex;gap:0.4rem;align-items:center;">
-          <button class="btn btn-sm" onclick="runScan(${a.id}, this)" title="Executar scan">▶ SCAN</button>
+          <button class="btn btn-sm" onclick="openScanTypeModal(${a.id})" title="Executar scan">▶ SCAN</button>
           <button class="btn btn-sm" onclick="openEditAlvo(${a.id})" title="Editar">✎</button>
-          <button class="btn btn-sm btn-danger" onclick="openDelModal(${a.id},'${a.ip||a.url}')" title="Excluir">✕</button>
+          <button class="btn btn-sm btn-danger" onclick="openDelModal(${a.id},'${escapeHtml(a.ip||a.url)}')" title="Excluir">✕</button>
         </div>
       </td>
     </tr>
   `).join('');
 }
 
-function renderScans() {
+// ---- RENDER HISTORY TABLES ----
+function renderScansHistory() {
   const tbody = document.getElementById('scans-body');
   if (!scansCache.length) {
-    tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">◌</div>Nenhum scan realizado</div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">◌</div>Nenhum scan NMAP realizado</div></td></tr>`;
     return;
   }
   const sorted = [...scansCache].reverse();
   tbody.innerHTML = sorted.map(s => `
     <tr>
       <td class="ts">${s.id}</td>
-      <td>${s.alvo?.url || '—'}</td>
-      <td class="ip-badge">${s.alvo?.ip || '—'}</td>
+      <td>${escapeHtml(s.alvo?.url) || '—'}</td>
+      <td class="ip-badge">${escapeHtml(s.alvo?.ip) || '—'}</td>
       <td><span class="port-badge">${s.porta}</span></td>
-      <td class="service-badge">${s.servico}</td>
+      <td class="service-badge">${escapeHtml(s.servico)}</td>
       <td class="ts">${fmtDate(s.dataHora)}</td>
     </tr>
   `).join('');
 }
 
-function renderDashboard() {
-  const tbody = document.getElementById('dashboard-scans-body');
-  const last = [...scansCache].reverse().slice(0, 10);
-  if (!last.length) {
-    tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">◌</div>Nenhum scan realizado ainda</div></td></tr>`;
+function renderVulnsHistory() {
+  const tbody = document.getElementById('vulns-body');
+  if (!vulnsCache.length) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">◌</div>Nenhuma vulnerabilidade encontrada</div></td></tr>`;
     return;
   }
-  tbody.innerHTML = last.map(s => `
+  const sorted = [...vulnsCache].reverse();
+  tbody.innerHTML = sorted.map(v => `
     <tr>
-      <td class="ts">${s.id}</td>
-      <td>${s.alvo?.url || '—'}</td>
-      <td class="ip-badge">${s.alvo?.ip || '—'}</td>
-      <td><span class="port-badge">${s.porta}</span></td>
-      <td class="service-badge">${s.servico}</td>
-      <td class="ts">${fmtDate(s.dataHora)}</td>
+      <td class="ts">${v.id}</td>
+      <td>${escapeHtml(v.alvo?.url) || '—'}</td>
+      <td class="ip-badge">${escapeHtml(v.alvo?.ip) || '—'}</td>
+      <td>${sevBadge(v.severidade)}</td>
+      <td>${escapeHtml(v.nome)}</td>
+      <td class="ts">${escapeHtml(v.templateId)}</td>
+      <td class="ip-badge">${escapeHtml(v.matchedAt)}</td>
+      <td class="ts">${fmtDate(v.dataHora)}</td>
     </tr>
   `).join('');
 }
 
-// ---- SCAN ----
-async function runScan(id, btn) {
-  const orig = btn.innerHTML;
-  btn.innerHTML = '<span class="scanner-running">⟳ SCANNING...</span>';
-  btn.disabled = true;
-  try {
-    await apiFetch(`/Scan/post/${id}`, {method:'POST'});
-    toast('Scan concluído com sucesso!', 'success');
-    await loadScans();
-    updateStats();
-  } catch(e) {
-    toast(e.message || 'Erro ao executar scan', 'error');
-  } finally {
-    btn.innerHTML = orig;
-    btn.disabled = false;
+function sevBadge(sev) {
+  const s = (sev||'info').toLowerCase();
+  const cls = ['info','low','medium','high','critical'].includes(s) ? `sev-${s}` : 'sev-info';
+  return `<span class="vuln-sev ${cls}">${escapeHtml(s)}</span>`;
+}
+
+// ---- RENDER DASHBOARD (agrupado por alvo) ----
+function renderDashboard() {
+  const container = document.getElementById('dashboard-alvos');
+  if (!alvosCache.length) {
+    container.innerHTML = `<div class="empty"><div class="empty-icon">◌</div>Cadastre um alvo para começar</div>`;
+    return;
   }
+
+  // Agrupa scans e vulns por id de alvo
+  const scansPorAlvo = new Map();
+  for (const s of scansCache) {
+    if (!s.alvo) continue;
+    const key = s.alvo.id;
+    if (!scansPorAlvo.has(key)) scansPorAlvo.set(key, []);
+    scansPorAlvo.get(key).push(s);
+  }
+  const vulnsPorAlvo = new Map();
+  for (const v of vulnsCache) {
+    if (!v.alvo) continue;
+    const key = v.alvo.id;
+    if (!vulnsPorAlvo.has(key)) vulnsPorAlvo.set(key, []);
+    vulnsPorAlvo.get(key).push(v);
+  }
+
+  container.innerHTML = alvosCache.map(a => renderAlvoCard(
+    a,
+    scansPorAlvo.get(a.id) || [],
+    vulnsPorAlvo.get(a.id) || []
+  )).join('');
+}
+
+function renderAlvoCard(alvo, scans, vulns) {
+  const ultimo = ultimoScanTs(scans, vulns);
+
+  // Portas únicas (porta:servico) ordenadas
+  const portasMap = new Map();
+  for (const s of scans) {
+    portasMap.set(`${s.porta}:${s.servico}`, s);
+  }
+  const portasArr = [...portasMap.keys()].sort((a,b) => parseInt(a) - parseInt(b));
+
+  // Vulnerabilidades ordenadas por severidade
+  const ordemSev = { critical:0, high:1, medium:2, low:3, info:4 };
+  const vulnsOrd = [...vulns].sort((a,b) => {
+    const sa = ordemSev[(a.severidade||'').toLowerCase()] ?? 5;
+    const sb = ordemSev[(b.severidade||'').toLowerCase()] ?? 5;
+    return sa - sb;
+  });
+
+  return `
+    <div class="alvo-card">
+      <div class="alvo-card-header">
+        <div>
+          <div class="alvo-card-id">// ALVO #${alvo.id}</div>
+          <div class="alvo-card-title">${escapeHtml(alvo.ip) || '—'}</div>
+          <div class="alvo-card-url">${escapeHtml(alvo.url) || '—'}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;">
+          <div class="alvo-card-meta">Último scan: ${ultimo ? fmtDate(ultimo) : 'nunca'}</div>
+          <button class="btn btn-sm" onclick="openScanTypeModal(${alvo.id})">▶ NOVO SCAN</button>
+        </div>
+      </div>
+
+      <div class="alvo-section">
+        <div class="alvo-section-title">// PORTAS ABERTAS <span class="count">${portasArr.length}</span></div>
+        ${portasArr.length === 0
+          ? `<div class="alvo-section-empty">Sem scan NMAP executado.</div>`
+          : `<div>${portasArr.map(p => {
+              const [porta, servico] = p.split(':');
+              return `<span class="port-badge">${escapeHtml(porta)} · ${escapeHtml(servico)}</span>`;
+            }).join('')}</div>`
+        }
+      </div>
+
+      <div class="alvo-section">
+        <div class="alvo-section-title">// VULNERABILIDADES <span class="count">${vulnsOrd.length}</span></div>
+        ${vulnsOrd.length === 0
+          ? `<div class="alvo-section-empty">Sem scan Nuclei executado ou nada encontrado.</div>`
+          : `<div class="vuln-list">${vulnsOrd.map(v => `
+              <div class="vuln-item">
+                ${sevBadge(v.severidade)}
+                <div class="vuln-body">
+                  <div class="vuln-name">${escapeHtml(v.nome)}</div>
+                  <div class="vuln-template">${escapeHtml(v.templateId)}</div>
+                  <div class="vuln-where">→ ${escapeHtml(v.matchedAt)}</div>
+                </div>
+              </div>
+            `).join('')}</div>`
+        }
+      </div>
+    </div>
+  `;
+}
+
+function ultimoScanTs(scans, vulns) {
+  let max = null;
+  const consider = (d) => { if (d && (!max || d > max)) max = d; };
+  scans.forEach(s => consider(s.dataHora));
+  vulns.forEach(v => consider(v.dataHora));
+  return max;
+}
+
+// ---- SCAN: TYPE SELECTION ----
+function openScanTypeModal(alvoId) {
+  scanTargetId = alvoId;
+  const alvo = alvosCache.find(a => a.id === alvoId);
+  document.getElementById('scan-type-alvo').textContent =
+    alvo ? (alvo.ip || alvo.url || `#${alvoId}`) : `#${alvoId}`;
+
+  document.getElementById('scan-type-list').innerHTML = SCAN_TYPES.map(t => `
+    <div class="scan-type-card" onclick="runScan('${t.id}')">
+      <div class="stc-name">▶ ${escapeHtml(t.nome)}</div>
+      <div class="stc-desc">${escapeHtml(t.desc)}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('scan-type-modal').classList.add('open');
+}
+
+function closeScanTypeModal() {
+  document.getElementById('scan-type-modal').classList.remove('open');
+  scanTargetId = null;
+}
+
+async function runScan(tipo) {
+  if (!scanTargetId) return;
+  const id = scanTargetId;
+  const alvo = alvosCache.find(a => a.id === id);
+  const alvoLabel = alvo ? (alvo.ip || alvo.url || `#${id}`) : `#${id}`;
+  closeScanTypeModal();
+
+  openReportModal(tipo, alvoLabel);
+  try {
+    const resp = await apiFetch(`/Scan/post/${id}/${tipo}`, {method:'POST'});
+    const texto = typeof resp === 'string' ? resp : JSON.stringify(resp, null, 2);
+    setReportContent(texto);
+    toast(`Scan ${tipo.toUpperCase()} concluído!`, 'success');
+    await loadAll();
+  } catch(e) {
+    setReportError(e.message || 'Erro ao executar scan');
+    toast('Falha no scan', 'error');
+  }
+}
+
+// ---- REPORT MODAL ----
+function openReportModal(tipo, alvoLabel) {
+  document.getElementById('report-modal-title').textContent =
+    `// RELATÓRIO ${tipo.toUpperCase()}`;
+  document.getElementById('report-modal-meta').innerHTML =
+    `<span class="tag">${escapeHtml(tipo.toUpperCase())}</span> Alvo: ${escapeHtml(alvoLabel)}`;
+  const body = document.getElementById('report-modal-body');
+  body.classList.add('loading');
+  body.classList.remove('error');
+  body.innerHTML = `<span class="spinner"></span> Executando scan, aguarde...`;
+  document.getElementById('report-modal').classList.add('open');
+}
+
+function setReportContent(texto) {
+  const body = document.getElementById('report-modal-body');
+  body.classList.remove('loading', 'error');
+  body.textContent = texto || '(sem conteúdo)';
+}
+
+function setReportError(msg) {
+  const body = document.getElementById('report-modal-body');
+  body.classList.remove('loading');
+  body.classList.add('error');
+  body.textContent = `⚠ ${msg}`;
+}
+
+function closeReportModal() {
+  document.getElementById('report-modal').classList.remove('open');
 }
 
 // ---- ALVOS MODAL ----
@@ -1001,8 +1062,7 @@ async function saveAlvo() {
       toast('Alvo cadastrado!', 'success');
     }
     closeAlvoModal();
-    await loadAlvos();
-    updateStats();
+    await loadAll();
   } catch(e) {
     toast(e.message || 'Erro ao salvar', 'error');
   }
@@ -1026,8 +1086,7 @@ async function confirmDelete() {
     await apiFetch(`/Alvo/delete/${deleteTargetId}`, {method:'DELETE'});
     toast('Alvo removido!', 'success');
     closeDelModal();
-    await loadAlvos();
-    updateStats();
+    await loadAll();
   } catch(e) {
     toast(e.message || 'Erro ao excluir', 'error');
     closeDelModal();
@@ -1035,20 +1094,21 @@ async function confirmDelete() {
 }
 
 // ---- TABS ----
-function switchTab(name) {
+function switchTab(name, ev) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
   document.getElementById(`tab-${name}`).classList.add('active');
-  event.target.classList.add('active');
-  if (name === 'scans') loadScans();
-  if (name === 'alvos') loadAlvos();
+  if (ev?.target) ev.target.classList.add('active');
+  if (name === 'dashboard') renderDashboard();
 }
 
 // Close modals on overlay click
 document.getElementById('alvo-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeAlvoModal(); });
 document.getElementById('del-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeDelModal(); });
+document.getElementById('scan-type-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeScanTypeModal(); });
+document.getElementById('report-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeReportModal(); });
 
-// Enter key support on login
+// Enter key on auth forms
 document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 document.getElementById('reg-pass').addEventListener('keydown', e => { if(e.key==='Enter') doRegister(); });
 </script>

@@ -39,21 +39,29 @@ chaveApi=sua-chave-da-openrouter-aqui
 
 ---
 
-### 2. Subir o banco de dados com Docker
+### 2. Subir o banco e construir a imagem do scanner
+
+O backend executa cada scan via `docker run --rm scanner-image ansible-playbook ...`.
+A imagem `scanner-image` (definida em `infra/Dockerfile`, contém Ansible + NMAP + Nuclei)
+é construída automaticamente junto com o `--build`:
 
 ```shell
-docker compose up -d
+docker compose up -d --build
 ```
 
-Para verificar que o container está rodando:
+O serviço `scanner` inicia, executa um `echo` e termina — o container fica "exited",
+mas a **imagem permanece disponível** no Docker para os scans em runtime.
+
+Verificar:
 
 ```shell
-docker ps
+docker ps -a              # postgres UP, scanner Exited (normal)
+docker images | grep scanner-image   # imagem deve aparecer
 ```
 
 ---
 
-### 3. Compilar e rodar a aplicação
+### 4. Compilar e rodar a aplicação
 
 ```shell
 chmod +x mvnw
@@ -64,7 +72,7 @@ A aplicação vai iniciar na porta **8080**.
 
 ---
 
-### 4. Registrar um usuário (Postman)
+### 5. Registrar um usuário (Postman)
 
 **POST** `http://localhost:8080/auth/register`
 
@@ -82,7 +90,7 @@ Resposta esperada: `Resgistrado com sucesso`
 
 ---
 
-### 5. Fazer login e obter o token (Postman)
+### 6. Fazer login e obter o token (Postman)
 
 **POST** `http://localhost:8080/auth/login`
 
@@ -99,7 +107,7 @@ A resposta será o **token JWT**. Copie esse token.
 
 ---
 
-### 6. Usar o token nas requisições
+### 7. Usar o token nas requisições
 
 Em qualquer outra requisição no Postman, vá em:
 
@@ -107,7 +115,7 @@ Em qualquer outra requisição no Postman, vá em:
 
 ---
 
-### 7. Acessar o frontend
+### 8. Acessar o frontend
 
 Abra o arquivo `index.html` na raiz do projeto diretamente no navegador:
 
